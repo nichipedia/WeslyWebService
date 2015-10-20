@@ -57,6 +57,8 @@ var router = express.Router();
     });
 
 
+//CHANGES: jkdsajkhfdsajkl
+
     // REGISTER OUR ROUTES -------------------------------
     // all of our routes will be prefixed with /api
     app.use('/api', router);
