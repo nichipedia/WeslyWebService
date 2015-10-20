@@ -20,6 +20,8 @@ var http = require('http');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+var bs = new BinaryServer({port: 3000});
+
 var port = process.env.PORT || 9000;       
 
 // routes for api
@@ -53,6 +55,7 @@ router.post('/audio', function(req, res) {
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
 app.use('/api', router);
+
 
 var server = http.createServer(app).listen(port);
 
