@@ -1,5 +1,9 @@
 {
     "name": "WeslyWebService",
+    "version": "0.2",
+    "description": "Web API for using Sonus",
+    "author": "Team Sonus",
+    "license": "MIT",
     "main": "server.js",
     "dependencies": {
         "express": "~4.0.0",
