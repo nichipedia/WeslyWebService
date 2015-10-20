@@ -5,18 +5,15 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
-<<<<<<< HEAD
 var mainController = require('./node_modules/voice/MC.js');
 var BinaryServer = require('binaryjs').BinaryServer;
 //var jsCont = require('./node_modules/binaryjs/dist/binary.js');
 var fs = require('fs');
-=======
 //var sonus = require('./node_modules/voice/sonus.js');
 //var wordList = require('./node_modules/voice/wordList.js');
 //var pocketSphinx = require('./node_modules/voice/pocketsphinx.js');
 //var BinaryServer = require('binaryjs').BinaryServer;
 //var fs = require('fs');
->>>>>>> 9f788a637df1a0fbc526da6904e08a6bef7e3c96
 var http = require('http');
 
 
@@ -30,15 +27,11 @@ var http = require('http');
     }));
     app.use(bodyParser.json());
 
-<<<<<<< HEAD
 app.use(express.static(__dirname + '/public'));
 //var bs = new BinaryServer({port: 3000});
-//var port = process.env.PORT || 9000;       
-=======
-//var bs = new BinaryServer({port: 3000});
+//var port = process.env.PORT || 9000;   
 
 var port = process.env.PORT || 80;
->>>>>>> 9f788a637df1a0fbc526da6904e08a6bef7e3c96
 
 // routes for api
 var router = express.Router();
@@ -105,8 +98,4 @@ server.listen(9000);
 // START THE SERVER
 // =============================================================================
 
-<<<<<<< HEAD
 console.log('Magic happens on port 9000');
-=======
-    console.log('Magic happens on port ' + port);
->>>>>>> 9f788a637df1a0fbc526da6904e08a6bef7e3c96
