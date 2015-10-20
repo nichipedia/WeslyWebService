@@ -1,6 +1,6 @@
 {
     "name": "WeslyWebService",
-    "version": "0.2",
+    //"version": "0.2",
     "description": "Web API for using Sonus",
     "author": "Team Sonus",
     "license": "MIT",
