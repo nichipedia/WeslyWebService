@@ -7,13 +7,7 @@ var app = express();
 var bodyParser = require('body-parser');
 var mainController = require('./node_modules/voice/MC.js');
 var BinaryServer = require('binaryjs').BinaryServer;
-//var jsCont = require('./node_modules/binaryjs/dist/binary.js');
 var fs = require('fs');
-//var sonus = require('./node_modules/voice/sonus.js');
-//var wordList = require('./node_modules/voice/wordList.js');
-//var pocketSphinx = require('./node_modules/voice/pocketsphinx.js');
-//var BinaryServer = require('binaryjs').BinaryServer;
-//var fs = require('fs');
 var http = require('http');
 
 
@@ -79,15 +73,17 @@ var bs = new BinaryServer({port: 3000});
 bs.on('connection', function(client){
   // Incoming stream from browsers
   client.on('stream', function(stream, meta){
-    //
-    var file = fs.createWriteStream(__dirname+ '/public/' + meta.name);
-    stream.pipe(file);
+    //old
+    //var file = fs.createWriteStream(__dirname+ '/public/' + meta.name);
+	var file = fs.createWriteStream(__dirname+ '/node_modules/voice/wav/wavin.wav');    
+	stream.pipe(file);
     //
     // Send progress back
     stream.on('data', function(data){
       stream.write({rx: data.length / meta.size});
     });
-    //
+    //run file through sonus
+    mainController.sonus();
   });
 });
 //
