@@ -5,11 +5,9 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
-//var sonus = require('./node_modules/voice/sonus.js');
-//var wordList = require('./node_modules/voice/wordList.js');
-//var pocketSphinx = require('./node_modules/voice/pocketsphinx.js');
-//var BinaryServer = require('binaryjs').BinaryServer;
-//var fs = require('fs');
+var mainController = require('./node_modules/voice/MC.js');
+var BinaryServer = require('binaryjs').BinaryServer;
+var fs = require('fs');
 var http = require('http');
 
 
@@ -23,7 +21,9 @@ var http = require('http');
     }));
     app.use(bodyParser.json());
 
+app.use(express.static(__dirname + '/public'));
 //var bs = new BinaryServer({port: 3000});
+//var port = process.env.PORT || 9000;   
 
 var port = process.env.PORT || 80;
 
@@ -64,9 +64,36 @@ var router = express.Router();
     app.use('/api', router);
 
 
-var server = http.createServer(app).listen(port);
+var server = http.createServer(app);
+
+// Start Binary.js server
+//var BinaryServer = require('../../').BinaryServer;
+//var bs = BinaryServer({server: server});
+var bs = new BinaryServer({port: 3000});
+
+// Wait for new user connections
+bs.on('connection', function(client){
+  // Incoming stream from browsers
+  client.on('stream', function(stream, meta){
+    //old
+    //var file = fs.createWriteStream(__dirname+ '/public/' + meta.name);
+	var file = fs.createWriteStream(__dirname+ '/node_modules/voice/wav/wavin.wav');    
+	stream.pipe(file);
+    //
+    // Send progress back
+    stream.on('data', function(data){
+      stream.write({rx: data.length / meta.size});
+    });
+    //run file through sonus
+    mainController.sonus();
+  });
+});
+//
+//
+
+server.listen(9000);
 
 // START THE SERVER
 // =============================================================================
 
-    console.log('Magic happens on port ' + port);
+console.log('Magic happens on port 9000');
