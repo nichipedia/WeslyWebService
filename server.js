@@ -16,12 +16,20 @@ var http = require('http');
 //TODO: will transfer audio in an array of bytes
 
 // this will let us get the data from a POST
-    app.use(bodyParser.urlencoded({
+   /*
+app.use(bodyParser.urlencoded({
         extended: true
     }));
-    app.use(bodyParser.json());
+ */
+
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.raw({ type: 'audio/wav', limit: '50mb' }));
+
+
+
 
 app.use(express.static(__dirname + '/public'));
+
 //var bs = new BinaryServer({port: 3000});
 //var port = process.env.PORT || 9000;   
 
@@ -29,7 +37,6 @@ var port = process.env.PORT || 80;
 
 // routes for api
 var router = express.Router();
-
 
 
 
@@ -47,9 +54,12 @@ var router = express.Router();
 
     router.post('/audio', function (req, res) {
 
-        console.log("Your audio is being translated");
+        
 
-
+    
+        console.log('Success!!');
+     
+        console.log("RECIEVED AUDIO: " + req.body);
 
 
 
@@ -64,11 +74,17 @@ var router = express.Router();
     app.use('/api', router);
 
 
+
 var server = http.createServer(app);
 
 // Start Binary.js server
 //var BinaryServer = require('../../').BinaryServer;
 //var bs = BinaryServer({server: server});
+function buildBinaryResponce(data){
+    
+    
+    
+
 var bs = new BinaryServer({port: 3000});
 
 // Wait for new user connections
@@ -88,6 +104,9 @@ bs.on('connection', function(client){
     mainController.sonus();
   });
 });
+    
+    
+}
 //
 //
 
