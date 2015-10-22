@@ -1,6 +1,5 @@
 {
     "name": "WeslyWebService",
-    //"version": "0.2",
     "description": "Web API for using Sonus",
     "author": "Team Sonus",
     "license": "MIT",
@@ -8,6 +7,6 @@
     "dependencies": {
         "express": "~4.0.0",
         "mongoose": "~3.6.13",
-        "body-parser": "~1.0.1"
+        "body-parser": "~1.14.1"
     }
 }
