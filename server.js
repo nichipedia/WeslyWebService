@@ -1,10 +1,10 @@
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser');
-var mainController = require('./node_modules/voice/MC.js');
-var BinaryServer = require('binaryjs').BinaryServer;
-var fs = require('fs');
-var http = require('http');
+var express         = require('express');
+var app             = express();
+var bodyParser      = require('body-parser');
+var sonus           = require('./VoCoNoMo/sonus.js');
+var BinaryServer    = require('binaryjs').BinaryServer;
+var fs              = require('fs');
+var http            = require('http');
 
 // This will let us get the data from a POST
 app.use(bodyParser.urlencoded({
@@ -36,21 +36,15 @@ var server = http.createServer(app);
 var bs = new BinaryServer({port: 3000});
 
 // Wait for new user connections
+sonus.init();
 bs.on('connection', function(client){
-  // Incoming stream from browsers
-  client.on('stream', function(stream, meta){
-	var file = fs.createWriteStream(__dirname+ '/node_modules/voice/wav/wavin.wav');    
-	stream.pipe(file);
-    stream.on('data', function(data){
-      //Data parameter is the byte array representation of the .wav file.
-      //Here will be a method call to send the byte array to pocketsphynx
-
-      //This will be changed as it is the current file copying method.
-      stream.write({rx: data.length / meta.size});
+    // Incoming stream from browsers
+    client.on('stream', function(stream, meta){
+        // var file = fs.createWriteStream(__dirname+ '/node_modules/voice/wav/wavin.wav');    
+        // stream.pipe(file);
+        console.log('Recognizing...');
+        sonus.recognize(stream);
     });
-    //run file through sonus
-    mainController.sonus();
-  });
 });
 
 server.listen(9000);
