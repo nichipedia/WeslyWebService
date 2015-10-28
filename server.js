@@ -101,7 +101,7 @@ bs.on('connection', function(client){
       stream.write({rx: data.length / meta.size});
     });
     //run file through sonus
-    mainController.sonus();
+    //mainController.sonus();
   });
 });
     
