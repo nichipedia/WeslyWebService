@@ -36,12 +36,18 @@ var User = mongoose.model('User', userSchema);
 
 
 
-mongoose.connect('mongodb://pawn:password@ds045664.mongolab.com:45664/sonusjsdb');
+var db = mongoose.connect('mongodb://pawn:password@ds045664.mongolab.com:45664/sonusjsdb');
 
 
 
 
-
+function checkAuth(req, res, next) {
+    if (!req.session.user_id) {
+        res.send('You are not authorized to view this page');
+    } else {
+        next();
+    }
+}
 
 
 app.use(bodyParser.urlencoded());
@@ -74,57 +80,74 @@ var router = express.Router();
 
 
 
-    router.get('/', function (req, res) {
+router.get('/', function (req, res) {
 
 
 
-        console.log("GET Success! status code 200");
-        res.sendstatus(200).sendfile('public/index.html');
+    console.log("GET Success! status code 200");
+    res.sendstatus(200).sendfile('public/index.html');
 
 
-    });
+});
 
 
-
-    app.post('/signup', function (req, res) {
-
-
-
-
-        User.find({ userName : req.body.username }, function(err, user) {
-
-
-
-           if(err) {
-              console.log('error connecting to db');
-           } 
-
-           if(user.length != 0){
-
-               console.log('user already exsists');
-               res.send('user already exsists');
-
-           }
-
-            else{
-
-                var newUser = new User({
-
-                    userName: req.body.username
-                    ,passWord: req.body.password
+app.get('/login', function (req, res) {
+    var post = req.body;
+    if (post.user === 'john' && post.password === 'johnspassword') {
+        req.session.user_id = johns_user_id_here;
+        res.redirect('/my_secret_page');
+    } else {
+        res.send('Bad user/pass');
+    }
+});
 
 
 
-                });
-
-                newUser.save(function(err) {
-                    if (err) throw err;
-
-                    console.log('User created!');
-                });
 
 
-            }
+app.get('/my_secret_page', checkAuth, function (req, res) {
+    res.send('if you are viewing this page it means you are logged in');
+});
+
+
+app.post('/signup', function (req, res) {
+
+    
+    
+    
+    User.find({ userName : 'swagthug' }, function(err, user) {
+       
+        
+        
+       if(err) {
+          console.log('error connecting to db');
+       } 
+       
+       if(user.length != 0){
+        
+           console.log('user already exsists');
+           
+       }
+        
+        else{
+            
+            var newUser = new User({
+
+                userName: req.body.username
+                ,passWord: req.body.password
+
+
+
+            });
+
+            newUser.save(function(err) {
+                if (err) throw err;
+
+                console.log('User created!');
+            });
+
+            
+        }
         
         
     
@@ -132,17 +155,17 @@ var router = express.Router();
        
     
         
+        
+        
+        
+                });
 
 
-
-                    });
-
-
-
-        res.send('hugs n kisses xoxoxoxo');
-    });
-
-
+ 
+    res.send('hugs n kisses xoxoxoxo');
+});
+    
+    
    
 
 
@@ -157,27 +180,30 @@ var router = express.Router();
 
 
 
-    
+app.get('/logout', function (req, res) {
+    delete req.session.user_id;
+    res.redirect('/login');
+});
 
 
-    router.post('/api/audio', function (req, res) {
-
-
-
-
-
-        console.log('POST Success!! Status code 200');
-
-        console.log("RECIEVED AUDIO: ", req.body);
+router.post('/api/audio', function (req, res) {
 
 
 
 
 
+    console.log('POST Success!! Status code 200');
+
+    console.log("RECIEVED AUDIO: ", req.body);
 
 
 
-    });
+
+
+
+
+
+});
 
 
 
@@ -186,13 +212,13 @@ var router = express.Router();
 
 
 
-        app.use('/', router);
+app.use('/', router);
 
 
 
-        var server = http.createServer(app);
+var server = http.createServer(app);
 
-        // Start Binary.js server
+// Start Binary.js server
 
 
 
@@ -221,6 +247,12 @@ bs.on('connection', function (client) {
         //run file through sonus
         mainController.sonus();
     });
+<<<<<<< HEAD
+=======
+    //run file through sonus
+    //mainController.sonus();
+  });
+>>>>>>> bb9df5dec9b5db78ecdf78ded80f47ca0993ec46
 });
 */
 
