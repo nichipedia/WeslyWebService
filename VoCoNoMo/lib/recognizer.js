@@ -75,17 +75,21 @@ function addGrammar() {
     ;
 
     transitions.push_back({from: 0, to: 0, logp: 0, word: ''});
-    transitions.push_back({from: 0, to: 1, logp: 0, word: 'MORE'});
-    transitions.push_back({from: 1, to: 2, logp: 0, word: 'WHISKEY'});
+    // transitions.push_back({from: 0, to: 1, logp: 0, word: 'MORE'});
+    // transitions.push_back({from: 1, to: 2, logp: 0, word: 'WHISKEY'});
 
     transitions.push_back({from: 0, to: 1, logp: 0, word: 'HELLO'});
     transitions.push_back({from: 1, to: 2, logp: 0, word: 'WORLD'});
 
-    transitions.push_back({from: 0, to: 1, logp: 0, word: 'ONE'});
+    transitions.push_back({from: 0, to: 1, logp: 0, word: 'THREE'});
     transitions.push_back({from: 1, to: 2, logp: 0, word: 'TWO'});
-    transitions.push_back({from: 2, to: 3, logp: 0, word: 'THREE'});
+    transitions.push_back({from: 2, to: 3, logp: 0, word: 'ONE'});
 
-    transitions.push_back({from: 0, to: 1, logp: 0, word: 'BLACKJACK'});
+    transitions.push_back({from: 0, to: 1, logp: 0, word: 'SOMETHING'});
+    transitions.push_back({from: 1, to: 2, logp: 0, word: 'ELSE'});
+
+
+    // transitions.push_back({from: 0, to: 1, logp: 0, word: 'BLACKJACK'});
 
     // wordList.forEach(function (word, i) {
     //     if (word[0] !== 'WHISKEY')

@@ -64,13 +64,13 @@ function recognizeWav(fileName) {
     });
 }
 
-function recognizeBuffer(audio) {
+function recognizeBuffer(audio, callBack) {
     var buffer  = new PS.AudioBuffer()
     ,   output
     ,   hyp
     ; 
 
-    audio.on('data', function (chunk) {
+    audio.on('data', function (chunk, callBack) {
         for (var i = 0; i < chunk.length; i += 1) {
             buffer.push_back(chunk.readUInt8(i));
         }
@@ -86,5 +86,8 @@ function recognizeBuffer(audio) {
         
         buffer.delete();
         recognizer.delete();
+        
+        callBack(hyp);
     });
+
 }
