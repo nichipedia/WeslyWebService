@@ -14,6 +14,7 @@ var mongoose = require('mongoose');
 
 
 
+
 mongoose.connection.on("open", function (ref) {
     console.log("Connected to mongo server.");
   
@@ -89,13 +90,14 @@ var router = express.Router();
     app.post('/signup', function (req, res) {
 
 
-
+        console.log('POST SUCCESS Status 200');
 
         User.find({ userName : req.body.username }, function(err, user) {
 
 
 
            if(err) {
+               throw err;
               console.log('error connecting to db');
            } 
 
@@ -123,7 +125,19 @@ var router = express.Router();
                     console.log('User created!');
                 });
 
+                
+                delete user;
 
+                User.findOne( {userName : req.body.username}, function(err, user) {
+                    
+                    console.log('User created ' + ' your usernaame is: ' + user.userName + ' and this is your unique user ID: ' + user._id);
+
+                    res.send('User created ' + ' your usernaame is: ' + user.userName + ' and this is your unique user ID: ' + user._id);
+                    
+                    
+                });
+                
+                
             }
         
         
@@ -139,11 +153,7 @@ var router = express.Router();
 
 
 
-        res.send('hugs n kisses xoxoxoxo');
     });
-
-
-   
 
 
 
@@ -169,6 +179,8 @@ var router = express.Router();
         console.log('POST Success!! Status code 200');
 
         console.log("RECIEVED AUDIO: ", req.body);
+        
+        res.send('Audio recieved');
 
 
 
