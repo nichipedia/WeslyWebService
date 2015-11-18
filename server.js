@@ -8,6 +8,18 @@ var fs = require('fs');
 var http = require('http');
 var mongoose = require('mongoose');
 var crypto = require('crypto');
+var nodemailer = require('nodemailer');
+var uuid = require('uuid');
+
+
+var smtpTransport = nodemailer.createTransport("SMTP",{
+    service: "Gmail",
+    auth: {
+        user: "w0526297",
+        pass: "Indian41"
+    }
+});
+var mailOptions,host,link;
 
 
 
@@ -21,11 +33,21 @@ mongoose.connection.on("error", function (err) {
 });
 
 var userSchema = new mongoose.Schema({
-    userName: String
+    firstName: String
+   ,lastName: String
+   ,email: String
    ,password: String
+   ,apiKey: String
    ,salt: String 
+   ,verified: Boolean
 });
 
+var commandSchema = new mongoose.Schema({
+   commands: Object
+  ,apiKey: String
+});
+
+var Command = mongoose.model('Command', commandSchema);
 var User = mongoose.model('User', userSchema);
 mongoose.connect('mongodb://pawn:password1234@ds045664.mongolab.com:45664/sonusjsdb');
 
@@ -56,78 +78,52 @@ router.get('/', function (req, res) {
 
 
 
-    router.get('/', function (req, res) {
 
-
-
-        console.log("GET Success! status code 200");
-        res.sendstatus(200).sendfile('public/index.html');
-
-
-    });
 
 
 
     app.post('/api/signup', function (req, res) {
 
-
         console.log('POST SUCCESS Status 200');
-
-        User.findOne({ userName : req.body.username }, function(err, user) {
-
-
+        User.findOne({ email : req.body.email }, function(err, user) {
 
            if(err) {
                throw err;
               console.log('error connecting to db');
+               res.status(401).json({success : false, message : 'Error connecting to database'});
            } 
 
            if(user){
-
                console.log('user already exsists');
                res.status(422).json({ success : false, message : 'User already exsists'});
-
            }
 
-           else{
-
-           
+           else {
+  
            var salt = generateSalt();
+           var apiKey = generateAPIKey();   
            var hash = generateHash(req.body.password, salt);
          
-
             var newUser = new User({
-                userName: req.body.username
+                firstName: req.body.firstName
+               ,lastName: req.body.lastName
+               ,email: req.body.email
                ,password: hash
+               ,apiKey: apiKey    
                ,salt: salt 
+               ,verified: false    
             });
-            
             newUser.save(function(err) {
                 if (err) throw err;
                     console.log('User created!');
-
                 });
-
-                
                 delete user;
-
-                User.findOne( {userName : req.body.username}, function(err, user) {
-                    
-                    console.log('User created ' + ' your usernaame is: ' + user.userName + ' and this is your unique user ID: ' + user._id);
-
-                    res.status(201).json({ success : true, apiKey : user._id, accountName : user.userName});
-                    
-                    
-                });
-                
-                
+               
+                    console.log('User created');
+                    res.status(201).json({ success : true, apiKey : apiKey, accountName : req.body.email}); 
+                 
             }
-        
-
-
-                    });
-
-
+        });
 
     });
 
@@ -143,17 +139,7 @@ router.get('/', function (req, res) {
 router.post('/api/audio', function (req, res) {
         console.log('POST Success!! Status code 200');
         console.log("RECIEVED AUDIO: ", req.body);
-
-        
         res.send('Audio recieved');
-
-
-
-
-
-
-
-
     });
 
 
@@ -166,6 +152,78 @@ router.get('/api/translate', function(req, res) {
 });
 
 
+
+router.post('/api/command', function(req, res) {
+   
+    User.findOne({apiKey : req.body.apiKey}, function(err, user) {
+       if(err)
+       {
+            throw err;        
+       }
+       else if(!user)
+       {
+           res.status(309).json({success : false, message : 'Your api key did not match any records in our database', apiKey : req.body.apiKey});   
+       } 
+       else 
+       {
+            Command.findOne({apiKey : req.body.apiKey}, function(err, apiUser) {
+                if(err)
+                {
+                    res.status(309).json({ success: false, message: 'Error connecting to db'});
+                    throw err;            
+                }
+                else if(!apiUser)
+                {
+                    delete apiUser;
+                    var apiUser = new Command({
+                        apiKey: req.body.apiKey
+                       ,commands: req.body.object
+                    });
+                    apiUser.save(function(err) {
+                        if (err) throw err;
+                        console.log('Command created!');
+                    });
+                    res.status(201).json({success: true, message: 'New commands were added for user'});
+                }
+                else 
+                {
+                    Command.update({apiKey: req.body.apiKey}, {commands: req.body.object}, callback);
+                    function callback(err, affected)
+                    {
+                        if(err)
+                        {
+                            res.status(401).json({ success: false, message: 'Was not able to update commands'});
+                            throw err;
+                        }
+                        else
+                        {
+                            res.status(201).json({ success: true, rowsAffected: affected, message: 'Commands were updated!'});            
+                        }
+                    }
+                }
+            });  
+       }
+    });   
+});
+
+router.get('/api/command', function(req, res) {
+    
+    var apiKey = req.get('apiKey');
+    Command.findOne({apiKey: apiKey}, function(err, apiUser) {
+       if(err)
+       {
+           throw err;
+       }
+       else if(!apiUser)
+       {
+           res.status(309).json({ success: false, message: 'User does not have any commands registered'});               
+       }
+       else
+       {
+           res.status(200).json({ success: true, message: 'Commands have been returned', Commands: apiUser.commands });
+       }
+    });
+});
 
 
 
@@ -202,7 +260,8 @@ bs.on('connection', function (client) {
 });
 */
 
-function generateHash(password, salt) {
+function generateHash(password, salt)
+{
     var hash = crypto
     .createHash('sha256')
     .update(salt + password)
@@ -211,7 +270,13 @@ function generateHash(password, salt) {
     return hash;
 }
 
-function generateSalt() {
+function generateAPIKey() 
+{
+    return uuid.v4();
+}
+
+function generateSalt() 
+{
     return crypto.randomBytes(16).toString('base64');
 }
 

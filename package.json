@@ -9,6 +9,8 @@
     "crypto": "0.0.3",
     "express": "~4.0.0",
     "mongodb": "3.0.7",
-    "mongoose": "*"
+    "mongoose": "*",
+    "nodemailer": "^1.10.0",
+    "uuid": "^2.0.1"
   }
 }
