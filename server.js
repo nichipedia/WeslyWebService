@@ -7,9 +7,8 @@ var bodyParser = require('body-parser');
 var fs = require('fs');
 var http = require('http');
 var mongoose = require('mongoose');
-//var crypto = require('crypto');
+var crypto = require('crypto');
 
-//var sonus = require('');
 
 
 mongoose.connection.on("open", function (ref) {
@@ -22,13 +21,13 @@ mongoose.connection.on("error", function (err) {
 });
 
 var userSchema = new mongoose.Schema({
-    userName: String,
-    passWord: String
-    salt: String 
+    userName: String
+   ,password: String
+   ,salt: String 
 });
 
 var User = mongoose.model('User', userSchema);
-mongoose.connect('mongodb://pawn:password@ds045664.mongolab.com:45664/sonusjsdb');
+mongoose.connect('mongodb://pawn:password1234@ds045664.mongolab.com:45664/sonusjsdb');
 
 app.use(bodyParser.urlencoded());
 
@@ -54,10 +53,9 @@ router.get('/', function (req, res) {
     res.sendstatus(200).sendfile('public/index.html');
 });
 
-app.post('/signup', function (req, res) {
-    User.find({ userName : req.body.username }, function(err, user) {
 
-<<<<<<< HEAD
+
+
     router.get('/', function (req, res) {
 
 
@@ -70,12 +68,12 @@ app.post('/signup', function (req, res) {
 
 
 
-    app.post('/signup', function (req, res) {
+    app.post('/api/signup', function (req, res) {
 
 
         console.log('POST SUCCESS Status 200');
 
-        User.find({ userName : req.body.username }, function(err, user) {
+        User.findOne({ userName : req.body.username }, function(err, user) {
 
 
 
@@ -84,43 +82,30 @@ app.post('/signup', function (req, res) {
               console.log('error connecting to db');
            } 
 
-           if(user.length != 0){
+           if(user){
 
                console.log('user already exsists');
-               res.send('user already exsists');
+               res.status(422).json({ success : false, message : 'User already exsists'});
 
            }
 
-            else{
+           else{
 
-                var newUser = new User({
-
-                    userName: req.body.username
-                    ,passWord: req.body.password
-=======
-       if(err) {
-          console.log('error connecting to db');
-       } 
->>>>>>> 51fe84e0ba534ec5cd6e1a47a2b8581a7ee60821
-
-       if(user.length != 0){
-
-           console.log('user already exsists');
-           res.send('user already exsists');
-
-       }else{
-
-           // var hash = crypto.createHash('sha256').update(req.body.password).digest('base64');
+           
+           var salt = generateSalt();
+           var hash = generateHash(req.body.password, salt);
+         
 
             var newUser = new User({
                 userName: req.body.username
-                ,passWord: req.body.password
+               ,password: hash
+               ,salt: salt 
             });
             
             newUser.save(function(err) {
                 if (err) throw err;
                     console.log('User created!');
-<<<<<<< HEAD
+
                 });
 
                 
@@ -130,7 +115,7 @@ app.post('/signup', function (req, res) {
                     
                     console.log('User created ' + ' your usernaame is: ' + user.userName + ' and this is your unique user ID: ' + user._id);
 
-                    res.send('User created ' + ' your usernaame is: ' + user.userName + ' and this is your unique user ID: ' + user._id);
+                    res.status(201).json({ success : true, apiKey : user._id, accountName : user.userName});
                     
                     
                 });
@@ -138,13 +123,6 @@ app.post('/signup', function (req, res) {
                 
             }
         
-        
-    
-        
-       
-    
-        
-
 
 
                     });
@@ -162,27 +140,10 @@ app.post('/signup', function (req, res) {
 
 
 //NOTE: This is the endpoint for passing data for the WAV/audio files
-
-
-
-=======
-            });
-
-        }
-            
-    });
->>>>>>> 51fe84e0ba534ec5cd6e1a47a2b8581a7ee60821
-    
-    res.send('hugs n kisses xoxoxoxo');
-
-});
-
-
-//NOTE: This is the endpoint for passing data for the WAV/audio files
 router.post('/api/audio', function (req, res) {
         console.log('POST Success!! Status code 200');
         console.log("RECIEVED AUDIO: ", req.body);
-<<<<<<< HEAD
+
         
         res.send('Audio recieved');
 
@@ -195,9 +156,17 @@ router.post('/api/audio', function (req, res) {
 
     });
 
-=======
+
+
+router.get('/api/translate', function(req, res) {
+   
+    
+    
+    
 });
->>>>>>> 51fe84e0ba534ec5cd6e1a47a2b8581a7ee60821
+
+
+
 
 
 // REGISTER OUR ROUTES -------------------------------
@@ -232,6 +201,19 @@ bs.on('connection', function (client) {
     });
 });
 */
+
+function generateHash(password, salt) {
+    var hash = crypto
+    .createHash('sha256')
+    .update(salt + password)
+    .digest('base64');
+
+    return hash;
+}
+
+function generateSalt() {
+    return crypto.randomBytes(16).toString('base64');
+}
 
 server.listen(port);
 

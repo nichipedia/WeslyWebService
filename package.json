@@ -1,13 +1,14 @@
 {
-    "name": "WeslyWebService",
-    "description": "Web API for using Sonus",
-    "author": "Team Sonus",
-    "license": "MIT",
-    "main": "server.js",
-    "dependencies": {
-        "express": "~4.0.0",
-        "mongoose": "*",
-        "body-parser": "~1.14.1",
-        "mongodb": "3.0.7"
-    }
+  "name": "WeslyWebService",
+  "description": "Web API for using Sonus",
+  "author": "Team Sonus",
+  "license": "MIT",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "~1.14.1",
+    "crypto": "0.0.3",
+    "express": "~4.0.0",
+    "mongodb": "3.0.7",
+    "mongoose": "*"
+  }
 }
