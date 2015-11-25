@@ -82,7 +82,7 @@ router.get('/', function (req, res) {
 
 
 
-    app.post('/api/signup', function (req, res) {
+    router.post('/api/signup', function (req, res) {
 
         console.log('POST SUCCESS Status 200');
         User.findOne({ email : req.body.email }, function(err, user) {
@@ -225,7 +225,39 @@ router.get('/api/command', function(req, res) {
     });
 });
 
-
+router.get('/api/accountinfo', function(req, res) {
+   
+    var apiKey = req.get('apiKey');
+    User.findOne({apiKey: apiKey}, function(err, userInfo) {
+       if(err)
+       {
+            throw err;        
+       }
+        else if(!userInfo)
+       {
+            res.status(400).json({ success: false, message: 'Your api key is not recognized'});         
+       }
+        else
+       {
+            Command.findOne({apiKey: apiKey}, function(err, commandList) {
+               if(err)
+               {
+                   throw err;
+               }
+                else if(!commandList)
+                {
+                    res.status(200).json({ success: true, firstName: userInfo.firstName, lastName: userInfo.lastName, email: userInfo.email, apiKey: apiKey, message: 'Did not find any commands saved'});            
+                }
+                else
+                {
+                    res.status(200).json({ success: true, firstName: userInfo.firstName, lastName: userInfo.lastName, email: userInfo.email, apiKey: apiKey, Commands: commandList.commands}); 
+                }
+            });
+       }
+        
+    });
+    
+});
 
 // REGISTER OUR ROUTES -------------------------------
 app.use('/', router);
