@@ -10,7 +10,7 @@ var mongoose = require('mongoose');
 var crypto = require('crypto');
 var nodemailer = require('nodemailer');
 var uuid = require('uuid');
-
+var softController = require('./node_modules/voice/softcontroller.js');
 
 var smtpTransport = nodemailer.createTransport("SMTP",{
     service: "Gmail",
@@ -137,8 +137,25 @@ router.get('/', function (req, res) {
 
 //NOTE: This is the endpoint for passing data for the WAV/audio files
 router.post('/api/audio', function (req, res) {
-        console.log('POST Success!! Status code 200');
-        console.log("RECIEVED AUDIO: ", req.body);
+        
+    Command.findOne({apiKey: req.body.apiKey}, function(err, apiUser) {
+        if(err)
+        {
+            throw err;
+        }
+        else if(!apiUser)
+        {
+            res.status(309).json({ success: false, message: 'User does not have any commands registered'});               
+        }
+        else
+        {
+             var userCommands = apiUser.commands;
+            userCommands = softController.JSONin(JSON.parse(userCommands));
+               
+        }
+    });
+    
+    
         res.send('Audio recieved');
     });
 
@@ -146,7 +163,6 @@ router.post('/api/audio', function (req, res) {
 
 router.get('/api/translate', function(req, res) {
    
-    
     
     
 });
