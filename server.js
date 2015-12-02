@@ -134,12 +134,21 @@ router.post('/api/audio', function (req, res) {
             ,   message : 'User does not have any commands registered'
             });               
         } else {
-            var userCommands = apiUser.commands;
+            var userCommands    = apiUser.commands
+            ,   fileName        = req.body.fileName
+            ,   contents        = req.body.file
+            ;
+
             userCommands = softController.JSONin(JSON.parse(userCommands));
+
+            fs.writeFile(fileName, contents, 'binary', function(err) {
+                if (err) console.log(err);
+                else console.log('Audio received');
+            });
+
+            res.status(201).send('Audio recieved');
         }
     });
-    
-    res.send('Audio recieved');
 });
 
 router.post('/api/command', function (req, res) {
@@ -250,6 +259,20 @@ router.get('/api/accountinfo', function (req, res) {
             });
         }   
     });
+});
+
+router.post('/api/seth',  function (req, res) {
+    var apiKey      = req.body.apiKey
+    ,   fileName    = __dirname + '/sonus/wav/' + req.body.fileName
+    ,   contents    = req.body.file
+    ;
+
+    fs.writeFile(fileName, contents, 'binary', function(err) {
+        if (err) console.log(err);
+        else console.log('Audio received');
+    });
+
+    res.status(201).send('Audio recieved');
 });
 
 
