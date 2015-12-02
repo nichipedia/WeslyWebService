@@ -3,6 +3,7 @@ var spawn = require('child_process').spawn;
 module.exports = function (wavFile, callBack) {
     var child = spawn(__dirname+ '/sonus.o', [wavFile]);
 
+    console.log('Recognizing file : ' + wavFile);
     child.stdout.on('data', function (data) {
         var result = /\|([\w\s]+)\|/g.exec(data.toString());
 

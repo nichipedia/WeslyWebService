@@ -51,8 +51,8 @@ function matchCommand(moduleResponse, JSONresponse) {
 }
 
 // Run VoCoNoMo to recognize and return command
-function recognize(fileName, commands) {
-    console.log(commands);
+function recognize(fileName, device) {
+    console.log(device.commands[0]);
     voco(fileName, function (result) {
         console.log('woo : ' + result);
     });

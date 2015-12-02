@@ -143,7 +143,7 @@ router.post('/api/audio', function (req, res) {
             ,   contents        = req.body.file
             ;
 
-            userCommands = softCtrl.JSONin(userCommands)//JSON.parse(userCommands));
+            userCommands = softCtrl.JSONin(JSON.parse(userCommands));
 
             fs.writeFile(fileName, contents, 'binary', function(err) {
                 if (err) {
