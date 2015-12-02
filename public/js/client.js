@@ -46,7 +46,7 @@ $(function() {
     ,   contentType : 'application/json'
     ,   data        : JSON.stringify({
             apiKey      : apiKey
-        ,   devices      : [{
+        ,   object      : JSON.stringify({ devices : [{
                 deviceName  : 'blackjack'
             ,   commands    : {
                     'hit me'    : 'hit'
@@ -58,7 +58,7 @@ $(function() {
                 ,   'restart'   : 'start'
                 ,   'start'     : 'start'
                 }
-            }]
+            }]})
         })
     }).done(function (res) {
         console.log('[ client ] | ' + res.message);

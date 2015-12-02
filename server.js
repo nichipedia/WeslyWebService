@@ -181,7 +181,7 @@ router.post('/api/command', function (req, res) {
                     delete apiUser;
                     var apiUser = new Command({
                         apiKey: req.body.apiKey
-                    ,   commands: req.body.devices
+                    ,   commands: req.body.object
                     });
                     apiUser.save(function(err) {
                         if (err) throw err;
@@ -189,7 +189,7 @@ router.post('/api/command', function (req, res) {
                     });
                     res.status(201).json({success: true, message: 'New commands were added for user'});
                 } else {
-                    Command.update({apiKey: req.body.apiKey}, {commands: req.body.devices}, function (err, affected) {
+                    Command.update({apiKey: req.body.apiKey}, {commands: req.body.object}, function (err, affected) {
                         if (err) {
                             res.status(401).json({
                                 success : false
