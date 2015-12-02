@@ -20,7 +20,7 @@ function postAudioToWesly(blob) {
             ,   file        : contents
             })
         }).done(function (msg) {
-            console.log('[ client ] ' + msg);
+            console.log(msg);
         });
     }
 
@@ -40,13 +40,13 @@ $('#record').on('click', function() {
 $(function() {
     // Register commands
     $.ajax({
-        url         : 'api/commands'
+        url         : 'api/command'
     ,   method      : 'POST'
     ,   dataType    : 'json'
     ,   contentType : 'application/json'
     ,   data        : JSON.stringify({
             apiKey      : apiKey
-        ,   device      : [{
+        ,   devices      : [{
                 deviceName  : 'blackjack'
             ,   commands    : {
                     'hit me'    : 'hit'
@@ -61,6 +61,6 @@ $(function() {
             }]
         })
     }).done(function (msg) {
-        console.log('[ client ] ' + msg);
+        console.log(msg);
     });
 });
