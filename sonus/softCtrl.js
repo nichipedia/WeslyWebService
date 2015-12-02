@@ -25,10 +25,10 @@ function JSONparse(data) {
             commands[cKeys[n]] = command[cKeys[n]];
         }
 
-        var res = [];
-        res['device'] = device;
-        res['commands'] = [commands];
-        response[i] = res;
+        response[i] = {
+            device      : device
+        ,   commands    : [commands]
+        }
     }
 
     return response;

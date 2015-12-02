@@ -139,7 +139,7 @@ router.post('/api/audio', function (req, res) {
             });               
         } else {
             var userCommands    = apiUser.commands
-            ,   fileName        = req.body.fileName
+            ,   fileName        = __dirname + '/sonus/wav/' + req.body.fileName
             ,   contents        = req.body.file
             ;
 
