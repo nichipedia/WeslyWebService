@@ -3,29 +3,19 @@ var fs      = require('fs')
 ;
 
 module.exports = {
-    JSONin  : function (data) {
-        var response = JSONparse(data);
-
-        //return final response back to server
-        return response;
-    }
-,   match   : function (moduleResponse, JSONresponse) {
-        var response = matchCommand(moduleResponse, JSONresponse);
-
-        //object to be returned to the user
-        return response;
-    }
-
+    JSONin      : JSONparse
+,   match       : matchCommand
+,   getCommand  : recognize
 }
 
 //parse the JSON object
 function JSONparse(data) {
-    var keys = Object.keys(data.device);
+    var keys = Object.keys(data.devices);
     var response = [];
-    for(var i=0; i<data.device.length;i++) {
-        var device = data.device[i].DeviceName;
-        var commandkeys = Object.keys(data.device[i].Commands);
-        var command = data.device[i].Commands;
+    for(var i=0; i<data.devices.length;i++) {
+        var device = data.devices[i].deviceName;
+        var commandkeys = Object.keys(data.devices[i].commands);
+        var command = data.devices[i].commands;
         var commands = [];
         var cKeys = Object.keys(command);
         for(var n=0; n<cKeys.length;n++){
@@ -57,3 +47,11 @@ function matchCommand(moduleResponse, JSONresponse) {
 
     return returnObject;
 }
+
+// Run VoCoNoMo to recognize and return command
+function recognize(fileName, commands) {
+    console.log(commands);
+    voco(fileName, function (result) {
+        console.log('woo : ' + result);
+    });
+} 

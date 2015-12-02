@@ -1,13 +1,13 @@
-var express         = require('express')
-,   app             = express()
-,   bodyParser      = require('body-parser')
-,   fs              = require('fs')
-,   http            = require('http')
-,   mongoose        = require('mongoose')
-,   crypto          = require('crypto')
-,   nodemailer      = require('nodemailer')
-,   uuid            = require('uuid')
-,   softController  = require('./sonus/softcontroller.js')
+var express     = require('express')
+,   app         = express()
+,   bodyParser  = require('body-parser')
+,   fs          = require('fs')
+,   http        = require('http')
+,   mongoose    = require('mongoose')
+,   crypto      = require('crypto')
+,   nodemailer  = require('nodemailer')
+,   uuid        = require('uuid')
+,   softCtrl    = require('./sonus/softCtrl.js')
 ,   mailOptions
 ,   host
 ,   link
@@ -143,11 +143,15 @@ router.post('/api/audio', function (req, res) {
             ,   contents        = req.body.file
             ;
 
-            userCommands = softController.JSONin(JSON.parse(userCommands));
+            userCommands = softCtrl.JSONin(JSON.parse(userCommands));
 
             fs.writeFile(fileName, contents, 'binary', function(err) {
-                if (err) console.log(err);
-                else console.log('Audio received');
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log('Audio received');
+                    softCtrl.getCommand(fileName, userCommands);
+                }
             });
 
             res.status(201).send('Audio recieved');

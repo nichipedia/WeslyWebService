@@ -19,8 +19,8 @@ function postAudioToWesly(blob) {
             ,   fileName    : 'seth.wav'
             ,   file        : contents
             })
-        }).done(function (msg) {
-            console.log(msg);
+        }).done(function (res) {
+            console.log('[ client ] | ' + res.message);
         });
     }
 
@@ -60,7 +60,7 @@ $(function() {
                 }
             }]
         })
-    }).done(function (msg) {
-        console.log(msg);
+    }).done(function (res) {
+        console.log('[ client ] | ' + res.message);
     });
 });
