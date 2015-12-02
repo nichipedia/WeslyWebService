@@ -49,6 +49,10 @@ var Command = mongoose.model('Command', commandSchema);
 var User = mongoose.model('User', userSchema);
 mongoose.connect('mongodb://pawn:password1234@ds045664.mongolab.com:45664/sonusjsdb');
 
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+
 app.use(bodyParser.json({
     limit       : '50mb'
 ,   urlencoded  : true
@@ -259,20 +263,6 @@ router.get('/api/accountinfo', function (req, res) {
             });
         }   
     });
-});
-
-router.post('/api/seth',  function (req, res) {
-    var apiKey      = req.body.apiKey
-    ,   fileName    = __dirname + '/sonus/wav/' + req.body.fileName
-    ,   contents    = req.body.file
-    ;
-
-    fs.writeFile(fileName, contents, 'binary', function(err) {
-        if (err) console.log(err);
-        else console.log('Audio received');
-    });
-
-    res.status(201).send('Audio recieved');
 });
 
 
