@@ -1,27 +1,26 @@
-//server.js homie
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser');
-//var mainController = require('./node_modules/voice/MC.js');
-//var BinaryServer = require('binaryjs').BinaryServer;
-var fs = require('fs');
-var http = require('http');
-var mongoose = require('mongoose');
-var crypto = require('crypto');
-var nodemailer = require('nodemailer');
-var uuid = require('uuid');
-var softController = require('./node_modules/voice/softcontroller.js');
+var express         = require('express')
+,   app             = express()
+,   bodyParser      = require('body-parser')
+,   BinaryServer    = require('binaryjs').BinaryServer
+,   fs              = require('fs')
+,   http            = require('http')
+,   mongoose        = require('mongoose')
+,   crypto          = require('crypto')
+,   nodemailer      = require('nodemailer')
+,   uuid            = require('uuid')
+,   softController  = require('./node_modules/voice/softcontroller.js')
+,   mailOptions
+,   host
+,   link
+;
 
-var smtpTransport = nodemailer.createTransport("SMTP",{
-    service: "Gmail",
-    auth: {
-        user: "w0526297",
-        pass: "Indian41"
+var smtpTransport = nodemailer.createTransport("SMTP", {
+    service : "Gmail"
+,   auth    : {
+        user : "w0526297"
+    ,   pass : "Indian41"
     }
 });
-var mailOptions,host,link;
-
-
 
 mongoose.connection.on("open", function (ref) {
     console.log("Connected to mongo server.");
@@ -33,18 +32,18 @@ mongoose.connection.on("error", function (err) {
 });
 
 var userSchema = new mongoose.Schema({
-    firstName: String
-   ,lastName: String
-   ,email: String
-   ,password: String
-   ,apiKey: String
-   ,salt: String 
-   ,verified: Boolean
+    firstName   : String
+,   lastName    : String
+,   email       : String
+,   password    : String
+,   apiKey      : String
+,   salt        : String 
+,   verified    : Boolean
 });
 
 var commandSchema = new mongoose.Schema({
-   commands: Object
-  ,apiKey: String
+    commands    : Object
+,   apiKey      : String
 });
 
 var Command = mongoose.model('Command', commandSchema);
@@ -54,20 +53,21 @@ mongoose.connect('mongodb://pawn:password1234@ds045664.mongolab.com:45664/sonusj
 app.use(bodyParser.urlencoded());
 
 app.use(bodyParser.json({
-    limit: '50mb',
-    urlencoded: false
+    limit       : '50mb'
+,   urlencoded  : false
 }));
 
 app.use(bodyParser.raw({
-    type: 'audio/wav',
-    limit: '50mb'
+    type    : 'audio/wav'
+,   limit   : '50mb'
 }));
 
 app.use(express.static(__dirname + '/public'));
 
 var port = process.env.PORT || 9000;
 
-//NOTE: routes for api  
+
+// REGISTER OUR ROUTES -------------------------------
 var router = express.Router();
 
 router.get('/', function (req, res) {
@@ -75,121 +75,91 @@ router.get('/', function (req, res) {
     res.sendstatus(200).sendfile('public/index.html');
 });
 
-
-
-
-
-
-
-
-    router.post('/api/signup', function (req, res) {
-
-        console.log('POST SUCCESS Status 200');
-        User.findOne({ email : req.body.email }, function(err, user) {
-
-           if(err) {
-               throw err;
-              console.log('error connecting to db');
-               res.status(401).json({success : false, message : 'Error connecting to database'});
-           } 
-
-           if(user){
-               console.log('user already exsists');
-               res.status(422).json({ success : false, message : 'User already exsists'});
-           }
-
-           else {
-  
-           var salt = generateSalt();
-           var apiKey = generateAPIKey();   
-           var hash = generateHash(req.body.password, salt);
-         
-            var newUser = new User({
-                firstName: req.body.firstName
-               ,lastName: req.body.lastName
-               ,email: req.body.email
-               ,password: hash
-               ,apiKey: apiKey    
-               ,salt: salt 
-               ,verified: false    
+router.post('/api/signup', function (req, res) {
+    console.log('POST SUCCESS Status 200');
+    User.findOne({ email : req.body.email }, function(err, user) {
+        if (err) {
+            throw err;
+            console.log('error connecting to db');
+            res.status(401).json({
+                success : false
+            ,   message : 'Error connecting to database'
             });
+        } 
+
+        if (user) {
+            console.log('user already exsists');
+            res.status(422).json({
+                success : false
+            ,   message : 'User already exsists'
+            });
+        } else {
+            var salt    = crypto.randomBytes(16).toString('base64')
+            ,   hash    = crypto.createHash('sha256').update(salt + req.body.password).digest('base64')
+            ,   apiKey  = uuid.v4()
+            ;
+
+            var newUser = new User({
+                firstName   : req.body.firstName
+            ,   lastName    : req.body.lastName
+            ,   email       : req.body.email
+            ,   password    : hash
+            ,   apiKey      : apiKey    
+            ,   salt        : salt 
+            ,   verified    : false    
+            });
+        
             newUser.save(function(err) {
                 if (err) throw err;
-                    console.log('User created!');
-                });
-                delete user;
-               
-                    console.log('User created');
-                    res.status(201).json({ success : true, apiKey : apiKey, accountName : req.body.email}); 
-                 
-            }
-        });
+                console.log('User created!');
+            });
 
+            delete user;
+            console.log('User created');
+            res.status(201).json({
+                success     : true
+            ,   apiKey      : apiKey
+            ,   accountName : req.body.email
+            }); 
+        }
     });
-
-
-
-
-
-
-
-
+});
 
 //NOTE: This is the endpoint for passing data for the WAV/audio files
 router.post('/api/audio', function (req, res) {
-        
     Command.findOne({apiKey: req.body.apiKey}, function(err, apiUser) {
-        if(err)
-        {
+        if (err) {
             throw err;
-        }
-        else if(!apiUser)
-        {
-            res.status(309).json({ success: false, message: 'User does not have any commands registered'});               
-        }
-        else
-        {
-             var userCommands = apiUser.commands;
+        } else if (!apiUser) {
+            res.status(309).json({
+                success : false
+            ,   message : 'User does not have any commands registered'
+            });               
+        } else {
+            var userCommands = apiUser.commands;
             userCommands = softController.JSONin(JSON.parse(userCommands));
-               
         }
     });
     
-    
-        res.send('Audio recieved');
-    });
-
-
-
-router.get('/api/translate', function(req, res) {
-   
-    
-    
+    res.send('Audio recieved');
 });
 
-
-
 router.post('/api/command', function(req, res) {
-   
     User.findOne({apiKey : req.body.apiKey}, function(err, user) {
-       if(err)
-       {
+        if (err) {
             throw err;        
-       }
-       else if(!user)
-       {
-           res.status(309).json({success : false, message : 'Your api key did not match any records in our database', apiKey : req.body.apiKey});   
-       } 
-       else 
-       {
+        } else if (!user) {
+            res.status(309).json({
+                success : false
+            ,   message : 'Your api key did not match any records in our database'
+            ,   apiKey  : req.body.apiKey
+            });   
+        } else {
             Command.findOne({apiKey : req.body.apiKey}, function(err, apiUser) {
-                if(err)
-                {
+                if(err) {
                     res.status(309).json({ success: false, message: 'Error connecting to db'});
                     throw err;            
-                }
-                else if(!apiUser)
-                {
+                } else if  (!apiUser) {
                     delete apiUser;
                     var apiUser = new Command({
                         apiKey: req.body.apiKey
@@ -200,133 +170,117 @@ router.post('/api/command', function(req, res) {
                         console.log('Command created!');
                     });
                     res.status(201).json({success: true, message: 'New commands were added for user'});
-                }
-                else 
-                {
+                } else {
                     Command.update({apiKey: req.body.apiKey}, {commands: req.body.object}, callback);
-                    function callback(err, affected)
-                    {
-                        if(err)
-                        {
-                            res.status(401).json({ success: false, message: 'Was not able to update commands'});
+                    function callback(err, affected) {
+                        if (err) {
+                            res.status(401).json({
+                                success : false
+                            ,   message : 'Was not able to update commands'
+                            });
                             throw err;
-                        }
-                        else
-                        {
-                            res.status(201).json({ success: true, rowsAffected: affected, message: 'Commands were updated!'});            
+                        } else {
+                            res.status(201).json({
+                                success         : true
+                            ,   message         : 'Commands were updated!'
+                            ,   rowsAffected    : affected
+                            });            
                         }
                     }
                 }
             });  
-       }
+        }
     });   
 });
 
 router.get('/api/command', function(req, res) {
-    
     var apiKey = req.get('apiKey');
     Command.findOne({apiKey: apiKey}, function(err, apiUser) {
-       if(err)
-       {
-           throw err;
-       }
-       else if(!apiUser)
-       {
-           res.status(309).json({ success: false, message: 'User does not have any commands registered'});               
-       }
-       else
-       {
-           res.status(200).json({ success: true, message: 'Commands have been returned', Commands: apiUser.commands });
-       }
+        if (err) {
+            throw err;
+        } else if (!apiUser) {
+            res.status(309).json({
+                success : false
+            ,   message : 'User does not have any commands registered'
+            });               
+        } else {
+            res.status(200).json({
+                success     : true
+            ,   message     : 'Commands have been returned'
+            ,   Commands    : apiUser.commands
+            });
+        }
     });
 });
 
 router.get('/api/accountinfo', function(req, res) {
-   
     var apiKey = req.get('apiKey');
     User.findOne({apiKey: apiKey}, function(err, userInfo) {
-       if(err)
-       {
-            throw err;        
-       }
-        else if(!userInfo)
-       {
-            res.status(400).json({ success: false, message: 'Your api key is not recognized'});         
-       }
-        else
-       {
+        if (err) {
+            throw err;
+        } else if (!userInfo) {
+            res.status(400).json({
+                success : false
+            ,   message : 'Your api key is not recognized'
+            });         
+        } else {
             Command.findOne({apiKey: apiKey}, function(err, commandList) {
-               if(err)
-               {
-                   throw err;
-               }
-                else if(!commandList)
-                {
-                    res.status(200).json({ success: true, firstName: userInfo.firstName, lastName: userInfo.lastName, email: userInfo.email, apiKey: apiKey, message: 'Did not find any commands saved'});            
-                }
-                else
-                {
-                    res.status(200).json({ success: true, firstName: userInfo.firstName, lastName: userInfo.lastName, email: userInfo.email, apiKey: apiKey, Commands: commandList.commands}); 
+                if (err) {
+                    throw err;
+                } else if (!commandList) {
+                    res.status(200).json({
+                        success     : true
+                    ,   message     : 'Did not find any commands saved'
+                    ,   firstName   : userInfo.firstName
+                    ,   lastName    : userInfo.lastName
+                    ,   email       : userInfo.email
+                    ,   apiKey      : apiKey
+                    });            
+                } else {
+                    res.status(200).json({
+                        success     : true
+                    ,   message     : 'Commands recieved'
+                    ,   firstName   : userInfo.firstName
+                    ,   lastName    : userInfo.lastName
+                    ,   email       : userInfo.email
+                    ,   apiKey      : apiKey
+                    ,   Commands    : commandList.commands
+                    }); 
                 }
             });
-       }
-        
+        }   
     });
-    
 });
 
-// REGISTER OUR ROUTES -------------------------------
+router.get('/api/translate', function(req, res) {
+    // Start Binary.js server
+    var bs = new BinaryServer({
+        port: 3000
+    });
+
+    // Wait for new user connections
+    bs.on('connection', function (client) {
+        // Incoming stream from browsers
+        client.on('stream', function (stream, meta) {
+            var file = fs.createWriteStream(__dirname + '/node_modules/voice/wav/wavin.wav');
+            stream.pipe(file);
+            
+            // Send progress back
+            stream.on('data', function (data) {
+                stream.write({
+                    rx : data.length / meta.size
+                });
+            });
+
+            //run file through sonus
+            mainController.sonus();
+        });
+    });
+});
+
+
 app.use('/', router);
 var server = http.createServer(app);
-
-
-// Start Binary.js server
-
-/*
-var bs = new BinaryServer({
-    port: 3000
-});
-
-// Wait for new user connections
-bs.on('connection', function (client) {
-    // Incoming stream from browsers
-    client.on('stream', function (stream, meta) {
-        //old
-        //var file = fs.createWriteStream(__dirname+ '/public/' + meta.name);
-        var file = fs.createWriteStream(__dirname + '/node_modules/voice/wav/wavin.wav');
-        stream.pipe(file);
-        //
-        // Send progress back
-        stream.on('data', function (data) {
-            stream.write({
-                rx: data.length / meta.size
-            });
-        });
-        //run file through sonus
-        mainController.sonus();
-    });
-});
-*/
-
-function generateHash(password, salt)
-{
-    var hash = crypto
-    .createHash('sha256')
-    .update(salt + password)
-    .digest('base64');
-
-    return hash;
-}
-
-function generateAPIKey() 
-{
-    return uuid.v4();
-}
-
-function generateSalt() 
-{
-    return crypto.randomBytes(16).toString('base64');
-}
 
 server.listen(port);
 
