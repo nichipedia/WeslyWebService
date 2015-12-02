@@ -1,33 +1,33 @@
 var express         = require('express')
 ,   app             = express()
 ,   bodyParser      = require('body-parser')
-,   BinaryServer    = require('binaryjs').BinaryServer
 ,   fs              = require('fs')
 ,   http            = require('http')
 ,   mongoose        = require('mongoose')
 ,   crypto          = require('crypto')
 ,   nodemailer      = require('nodemailer')
 ,   uuid            = require('uuid')
-,   softController  = require('./controller/softcontroller.js')
+,   BinaryServer    = require('binaryjs').BinaryServer
+,   softController  = require('./sonus/softcontroller.js')
 ,   mailOptions
 ,   host
 ,   link
 ;
 
-var smtpTransport = nodemailer.createTransport("SMTP", {
-    service : "Gmail"
+var smtpTransport = nodemailer.createTransport('SMTP', {
+    service : 'Gmail'
 ,   auth    : {
-        user : "w0526297"
-    ,   pass : "Indian41"
+        user : 'w0526297'
+    ,   pass : 'Indian41'
     }
 });
 
-mongoose.connection.on("open", function (ref) {
-    console.log("Connected to mongo server.");
+mongoose.connection.on('open', function (ref) {
+    console.log('Connected to mongo server.');
 });
 
-mongoose.connection.on("error", function (err) {
-    console.log("Could not connect to mongo server!");
+mongoose.connection.on('error', function (err) {
+    console.log('Could not connect to mongo server!');
     console.log(err);
 });
 
@@ -67,17 +67,18 @@ app.use(express.static(__dirname + '/public'));
 var port = process.env.PORT || 9000;
 
 
-// REGISTER OUR ROUTES -------------------------------
+// REGISTER OUR ROUTES
+// =============================================================================
 var router = express.Router();
 
 router.get('/', function (req, res) {
-    console.log("GET Success! status code 200");
+    console.log('GET Success! status code 200');
     res.sendstatus(200).sendfile('public/index.html');
 });
 
 router.post('/api/signup', function (req, res) {
     console.log('POST SUCCESS Status 200');
-    User.findOne({ email : req.body.email }, function(err, user) {
+    User.findOne({ email : req.body.email }, function (err, user) {
         if (err) {
             throw err;
             console.log('error connecting to db');
@@ -127,7 +128,7 @@ router.post('/api/signup', function (req, res) {
 
 //NOTE: This is the endpoint for passing data for the WAV/audio files
 router.post('/api/audio', function (req, res) {
-    Command.findOne({apiKey: req.body.apiKey}, function(err, apiUser) {
+    Command.findOne({apiKey: req.body.apiKey}, function (err, apiUser) {
         if (err) {
             throw err;
         } else if (!apiUser) {
@@ -144,8 +145,8 @@ router.post('/api/audio', function (req, res) {
     res.send('Audio recieved');
 });
 
-router.post('/api/command', function(req, res) {
-    User.findOne({apiKey : req.body.apiKey}, function(err, user) {
+router.post('/api/command', function (req, res) {
+    User.findOne({apiKey : req.body.apiKey}, function (err, user) {
         if (err) {
             throw err;        
         } else if (!user) {
@@ -155,9 +156,12 @@ router.post('/api/command', function(req, res) {
             ,   apiKey  : req.body.apiKey
             });   
         } else {
-            Command.findOne({apiKey : req.body.apiKey}, function(err, apiUser) {
+            Command.findOne({apiKey : req.body.apiKey}, function (err, apiUser) {
                 if(err) {
-                    res.status(309).json({ success: false, message: 'Error connecting to db'});
+                    res.status(309).json({
+                        success : false
+                    ,   message : 'Error connecting to db'
+                    });
                     throw err;            
                 } else if  (!apiUser) {
                     delete apiUser;
@@ -171,8 +175,7 @@ router.post('/api/command', function(req, res) {
                     });
                     res.status(201).json({success: true, message: 'New commands were added for user'});
                 } else {
-                    Command.update({apiKey: req.body.apiKey}, {commands: req.body.object}, callback);
-                    function callback(err, affected) {
+                    Command.update({apiKey: req.body.apiKey}, {commands: req.body.object}, function (err, affected) {
                         if (err) {
                             res.status(401).json({
                                 success : false
@@ -187,15 +190,15 @@ router.post('/api/command', function(req, res) {
                             });            
                         }
                     }
-                }
+                });
             });  
         }
     });   
 });
 
-router.get('/api/command', function(req, res) {
+router.get('/api/command', function (req, res) {
     var apiKey = req.get('apiKey');
-    Command.findOne({apiKey: apiKey}, function(err, apiUser) {
+    Command.findOne({apiKey: apiKey}, function (err, apiUser) {
         if (err) {
             throw err;
         } else if (!apiUser) {
@@ -213,9 +216,9 @@ router.get('/api/command', function(req, res) {
     });
 });
 
-router.get('/api/accountinfo', function(req, res) {
+router.get('/api/accountinfo', function (req, res) {
     var apiKey = req.get('apiKey');
-    User.findOne({apiKey: apiKey}, function(err, userInfo) {
+    User.findOne({apiKey: apiKey}, function (err, userInfo) {
         if (err) {
             throw err;
         } else if (!userInfo) {
@@ -224,7 +227,7 @@ router.get('/api/accountinfo', function(req, res) {
             ,   message : 'Your api key is not recognized'
             });         
         } else {
-            Command.findOne({apiKey: apiKey}, function(err, commandList) {
+            Command.findOne({apiKey: apiKey}, function (err, commandList) {
                 if (err) {
                     throw err;
                 } else if (!commandList) {
@@ -252,7 +255,7 @@ router.get('/api/accountinfo', function(req, res) {
     });
 });
 
-router.get('/api/translate', function(req, res) {
+router.get('/api/translate', function (req, res) {
     // Start Binary.js server
     var bs = new BinaryServer({
         port: 3000
