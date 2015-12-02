@@ -177,7 +177,7 @@ router.post('/api/command', function (req, res) {
                     delete apiUser;
                     var apiUser = new Command({
                         apiKey: req.body.apiKey
-                       ,commands: req.body.object
+                    ,   commands: req.body.object
                     });
                     apiUser.save(function(err) {
                         if (err) throw err;

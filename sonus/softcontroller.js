@@ -15,10 +15,8 @@ module.exports = {
         //object to be returned to the user
         return response;
     }
-}
 
-var test = JSONparse(JSON.parse(fs.readFileSync(__dirname + '/testjson.json', 'utf8')));
-console.log(test);
+}
 
 //parse the JSON object
 function JSONparse(data) {
