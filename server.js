@@ -143,7 +143,7 @@ router.post('/api/audio', function (req, res) {
             ,   contents        = req.body.file
             ;
 
-            userCommands = softCtrl.JSONin(JSON.parse(userCommands));
+            userCommands = softCtrl.JSONin(userCommands)//JSON.parse(userCommands));
 
             fs.writeFile(fileName, contents, 'binary', function(err) {
                 if (err) {
@@ -189,7 +189,7 @@ router.post('/api/command', function (req, res) {
                     });
                     res.status(201).json({success: true, message: 'New commands were added for user'});
                 } else {
-                    Command.update({apiKey: req.body.apiKey}, {devices: req.body.devices}, function (err, affected) {
+                    Command.update({apiKey: req.body.apiKey}, {commands: req.body.devices}, function (err, affected) {
                         if (err) {
                             res.status(401).json({
                                 success : false

@@ -10,18 +10,21 @@ module.exports = {
 
 //parse the JSON object
 function JSONparse(data) {
-    var keys = Object.keys(data.devices);
-    var response = [];
-    for(var i=0; i<data.devices.length;i++) {
-        var device = data.devices[i].deviceName;
+    var keys        = Object.keys(data.devices);
+    var response    = [];
+
+    for (var i = 0; i < data.devices.length; i++) {
+        var device      = data.devices[i].deviceName;
         var commandkeys = Object.keys(data.devices[i].commands);
-        var command = data.devices[i].commands;
-        var commands = [];
-        var cKeys = Object.keys(command);
-        for(var n=0; n<cKeys.length;n++){
+        var command     = data.devices[i].commands;
+        var commands    = [];
+        var cKeys       = Object.keys(command);
+
+        for (var n = 0; n < cKeys.length; n++) {
             var nm = cKeys[n];
             commands[cKeys[n]] = command[cKeys[n]];
         }
+
         var res = [];
         res['device'] = device;
         res['commands'] = [commands];
@@ -33,15 +36,14 @@ function JSONparse(data) {
 
 //check the module's response against the availiable commands for the user
 function matchCommand(moduleResponse, JSONresponse) {
-
-    for(var i=0; i<JSONresponse.length; i++){   
+    for (var i = 0; i < JSONresponse.length; i++) {   
         //response[0]['commands'][0]['other command'] <-- this is what you're looking for
-        if(m<JSONresponse[i]['commands'][moduleResponse]){
+        if (m < JSONresponse[i]['commands'][moduleResponse]) {
             var returnObject = JSONresponse[i]['commands'][moduleResponse];
         }
     }
 
-    if(!returnObject){
+    if (!returnObject) {
         var returnObject = "No Command Found"
     }
 
