@@ -15,19 +15,18 @@ function JSONparse(data) {
 
     for (var i = 0; i < data.devices.length; i++) {
         var device      = data.devices[i].deviceName;
-        var commandkeys = Object.keys(data.devices[i].commands);
-        var command     = data.devices[i].commands;
-        var commands    = [];
-        var cKeys       = Object.keys(command);
+        var phrases     = Object.keys(data.devices[i].commands);
+        var commands    = data.devices[i].commands;
+        var results     = []
 
-        for (var n = 0; n < cKeys.length; n++) {
-            var nm = cKeys[n];
-            commands[cKeys[n]] = command[cKeys[n]];
-        }
+        phrases.forEach(function (phrase) {
+            results.push(commands[phrase]);
+        })
 
         response[i] = {
             device      : device
-        ,   commands    : [commands]
+        ,   phrases     : phrases
+        ,   results     : results 
         }
     }
 
@@ -52,7 +51,7 @@ function matchCommand(moduleResponse, JSONresponse) {
 
 // Run VoCoNoMo to recognize and return command
 function recognize(fileName, device) {
-    console.log(device.commands[0]);
+    console.log(device);
     voco(fileName, function (result) {
         console.log('woo : ' + result);
     });
