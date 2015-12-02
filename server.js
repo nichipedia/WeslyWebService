@@ -8,7 +8,7 @@ var express         = require('express')
 ,   crypto          = require('crypto')
 ,   nodemailer      = require('nodemailer')
 ,   uuid            = require('uuid')
-,   softController  = require('./node_modules/voice/softcontroller.js')
+,   softController  = require('./controller/softcontroller.js')
 ,   mailOptions
 ,   host
 ,   link

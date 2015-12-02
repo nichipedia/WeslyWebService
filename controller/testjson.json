@@ -1,0 +1,15 @@
+{
+
+"device": [
+    {"DeviceName": "this device",
+    "Commands": {
+        "this command": "return string",
+        "other command": {"return object": {"this" : "that"}}
+	}
+     },
+
+    {"DeviceName": "this other device",
+    "Commands": {
+        "other device command": "return string"
+    }}]
+}
