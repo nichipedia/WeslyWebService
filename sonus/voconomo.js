@@ -1,14 +1,13 @@
 var spawn = require('child_process').spawn;
 
 module.exports = function (wavFile, callBack) {
-    var child = spawn(__dirname+ '\\sonus.o', [wavFile]);
+    var child = spawn(__dirname+ '/sonus.o', [wavFile]);
 
     child.stdout.on('data', function (data) {
-        var result = /|(\w+)|/g.exec(data.toString());
+        var result = /\|([\w\s]+)\|/g.exec(data.toString());
 
-        process.stdout.write(result); 
-
-        callBack(results.split(' '));
+        console.log(result[0]);
+        callBack(result[1]);
     });
 
     child.on('close', function (code) { 

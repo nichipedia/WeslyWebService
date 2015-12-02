@@ -10,7 +10,7 @@
 int main(int argc, char *argv[]) {
     ps_decoder_t *ps;
     cmd_ln_t *config;
-    FILE *fh, *fp;
+    FILE *fh;
     char const *hyp, *uttid;
     int16 buf[512];
     int rv;
@@ -35,9 +35,10 @@ int main(int argc, char *argv[]) {
     }
 
     // Open the wav file passed from argument
-    fh = fopen(argv[0], "rb");
+    printf("file: %s\n", argv[1]);
+    fh = fopen(argv[1], "rb");
     if (fh == NULL) {
-        fprintf(stderr, "Unable to open input file %s\n", argv[0]);
+        fprintf(stderr, "Unable to open input file %s\n", argv[1]);
         return -1;
     }
 
@@ -54,15 +55,10 @@ int main(int argc, char *argv[]) {
     // Recieve the recognized string
     rv = ps_end_utt(ps);
     hyp = ps_get_hyp(ps, &score);
-
-    // Write hypothesis to stdout and to file
-    fp = fopen("commands.log", "w");
-    fputs(hyp, fp);
     printf("Recognized: |%s|\n", hyp);
 
     // free memory
     fclose(fh);
-    fclose(fp);
     ps_free(ps);
     cmd_ln_free_r(config);
     

@@ -25,8 +25,9 @@ var analyserContext = null;
 var canvasWidth, canvasHeight;
 var recIndex = 0;
 
-function saveAudio() {
-    audioRecorder.exportMonoWAV( doneEncoding );
+function gotBuffers( buffers ) {
+    // audioRecorder.exportMonoWAV( doneEncoding );
+    audioRecorder.exportMonoWAV( postAudioToWesly );
 }
 
 function doneEncoding( blob ) {
@@ -39,6 +40,7 @@ function toggleRecording( e ) {
         // stop recording
         audioRecorder.stop();
         e.classList.remove("recording");
+        audioRecorder.getBuffers( gotBuffers );
 
     } else {
         // start recording

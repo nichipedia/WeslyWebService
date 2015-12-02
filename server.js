@@ -7,7 +7,6 @@ var express         = require('express')
 ,   crypto          = require('crypto')
 ,   nodemailer      = require('nodemailer')
 ,   uuid            = require('uuid')
-,   BinaryServer    = require('binaryjs').BinaryServer
 ,   softController  = require('./sonus/softcontroller.js')
 ,   mailOptions
 ,   host
@@ -50,11 +49,9 @@ var Command = mongoose.model('Command', commandSchema);
 var User = mongoose.model('User', userSchema);
 mongoose.connect('mongodb://pawn:password1234@ds045664.mongolab.com:45664/sonusjsdb');
 
-app.use(bodyParser.urlencoded());
-
 app.use(bodyParser.json({
     limit       : '50mb'
-,   urlencoded  : false
+,   urlencoded  : true
 }));
 
 app.use(bodyParser.raw({
@@ -189,8 +186,8 @@ router.post('/api/command', function (req, res) {
                             ,   rowsAffected    : affected
                             });            
                         }
-                    }
-                });
+                    });
+                }
             });  
         }
     });   
@@ -252,32 +249,6 @@ router.get('/api/accountinfo', function (req, res) {
                 }
             });
         }   
-    });
-});
-
-router.get('/api/translate', function (req, res) {
-    // Start Binary.js server
-    var bs = new BinaryServer({
-        port: 3000
-    });
-
-    // Wait for new user connections
-    bs.on('connection', function (client) {
-        // Incoming stream from browsers
-        client.on('stream', function (stream, meta) {
-            var file = fs.createWriteStream(__dirname + '/node_modules/voice/wav/wavin.wav');
-            stream.pipe(file);
-            
-            // Send progress back
-            stream.on('data', function (data) {
-                stream.write({
-                    rx : data.length / meta.size
-                });
-            });
-
-            //run file through sonus
-            mainController.sonus();
-        });
     });
 });
 

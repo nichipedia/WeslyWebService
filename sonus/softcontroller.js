@@ -1,4 +1,6 @@
-var fs = require('fs');
+var fs      = require('fs')
+,   voco    = require('./voconomo.js')
+;
 
 module.exports = {
     JSONin  : function (data) {
