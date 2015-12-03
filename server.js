@@ -134,6 +134,7 @@ router.post('/api/signup', function (req, res) {
 
 //NOTE: This is the endpoint for passing data for the WAV/audio files
 router.post('/api/audio', function (req, res) {
+if (!req.headers.apikey){
     Command.findOne({apiKey: req.body.apiKey}, function (err, apiUser) {
         if (err) {
             throw err;
@@ -168,6 +169,43 @@ router.post('/api/audio', function (req, res) {
             });
         }
     });
+}
+else{
+ Command.findOne({apiKey: req.headers.apikey}, function (err, apiUser) {
+        if (err) {
+            throw err;
+        } else if (!apiUser) {
+            res.status(309).json({
+                success : false
+            ,   message : 'User does not have any commands registered'
+            });               
+        } else {
+            var userCommands    = apiUser.commands
+            ,   fileName        = __dirname + '/sonus/wav/' + req.headers.filename
+            ,   contents        = req.body
+            ;
+
+            devices = softCtrl.JSONin(JSON.parse(userCommands));
+	fileName = String(fileName);
+            fs.writeFile(fileName, contents, 'binary', function(err) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log('Audio received');
+                    softCtrl.getCommand(fileName, devices[0], function (command) {
+                        console.log('\n woo : ' + command);
+
+                        res.status(201).json({
+                            success : true
+                        ,   message : 'Audio recieved'
+                        ,   command : command
+                        }); 
+                    });
+                }
+            });
+        }
+    });
+}
 });
 
 router.post('/api/command', function (req, res) {
