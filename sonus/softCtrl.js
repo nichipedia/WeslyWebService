@@ -62,8 +62,6 @@ function getCommand(fileName, device, callBack) {
             }
         });
 
-        if (!success) {
-            callBack(null);
-        }
+        if (!success) callBack();
     });
 } 

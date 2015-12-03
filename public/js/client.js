@@ -26,7 +26,16 @@ function postAudioToWesly(blob) {
             })
         }).done(function (res) {
             console.log('[ client ] ' + res.message);
-            console.log('command ' + res.command);
+            
+            if (!res.command) {
+                return;
+            } else if (res.command.localeCompare('hit')) {
+                $('#hit-btn').trigger('click');
+            } else if (res.command.localeCompare('stay')) {
+                $('#hold-btn').trigger('click');     
+            } else if (res.command.localeCompare('restart')) {
+                $('#start-btn').trigger('click');
+            }
         });
     }
 
@@ -62,8 +71,8 @@ $(function() {
                 ,   'stay'      : 'stay'
                 ,   'stand'     : 'stay'
                 ,   'fold'      : 'stay'
-                ,   'restart'   : 'start'
-                ,   'start'     : 'start'
+                ,   'restart'   : 'restart'
+                ,   'start'     : 'restart'
                 }
             }]})
         })

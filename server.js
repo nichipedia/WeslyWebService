@@ -47,8 +47,10 @@ var commandSchema = new mongoose.Schema({
 
 var Command = mongoose.model('Command', commandSchema);
 var User = mongoose.model('User', userSchema);
+
 //mongoose.connect('mongodb://pawn:password1234@ds045664.mongolab.com:45664/sonusjsdb');
 mongoose.connect('mongodb://localhost:27017/wesly');
+
 app.use(bodyParser.urlencoded({
   extended: true
 }));
@@ -74,12 +76,12 @@ var router = express.Router();
 
 router.get('/', function (req, res) {
     console.log('GET Success! status code 200');
-    res.sendstatus(200).sendfile('public/index.html');
+    res.status(200).sendfile('public/index.html');
 });
 
 router.get('/blackjack', function (req, res) {
     console.log('GET Success! status code 200');
-    res.sendstatus(200).sendfile('public/blackjack.html');
+    res.status(200).sendfile('public/blackjack.html');
 });
 
 router.post('/api/signup', function (req, res) {
@@ -158,11 +160,9 @@ router.post('/api/audio', function (req, res) {
                 } else {
                     console.log('Audio received');
                     softCtrl.getCommand(fileName, devices[0], function (command) {
-                        console.log('\n woo : ' + command);
-
                         res.status(201).json({
                             success : true
-                        ,   message : 'Audio recieved'
+                        ,   message : !command ? 'Audio recieved' : 'No command recognized'
                         ,   command : command
                         }); 
                     });
