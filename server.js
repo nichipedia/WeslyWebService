@@ -47,8 +47,8 @@ var commandSchema = new mongoose.Schema({
 
 var Command = mongoose.model('Command', commandSchema);
 var User = mongoose.model('User', userSchema);
-mongoose.connect('mongodb://pawn:password1234@ds045664.mongolab.com:45664/sonusjsdb');
-
+//mongoose.connect('mongodb://pawn:password1234@ds045664.mongolab.com:45664/sonusjsdb');
+mongoose.connect('mongodb://localhost:27017/wesly');
 app.use(bodyParser.urlencoded({
   extended: true
 }));
@@ -277,5 +277,11 @@ server.listen(port);
 
 // START THE SERVER
 // =============================================================================
+console.log('====================================');
+console.log(' _    _  ____  ___  ____  __   _  _ ');
+console.log('( \\/\\/ )( ___)/ __)( ___)(  ) ( \\/ )');
+console.log(' )    (  )__) \\__ \\ )__)  )(__ \\  / ');
+console.log('(__/\\__)(____)(___/(____)(____)(__)\n'); 
+console.log('====================================\n');
 
 console.log('Magic happens on port ' + port);
