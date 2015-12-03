@@ -11,7 +11,7 @@ module.exports = function (wavFile, callBack) {
     // ]);
 
     // ps.on('close', function (code) {
-        console.log('\nFinished sox down sample with process ' + code+'\n');
+        // console.log('\nFinished sox down sample with process ' + code+'\n');
        
         console.log('------------------------------------');
         console.log('  __________   ____  __ __  ______');
