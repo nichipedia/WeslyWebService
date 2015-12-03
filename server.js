@@ -285,3 +285,4 @@ console.log('(__/\\__)(____)(___/(____)(____)(__)\n');
 console.log('====================================\n');
 
 console.log('Magic happens on port ' + port);
+
