@@ -1,5 +1,10 @@
 var recording = false;
-var apiKey = '98098dae-674f-4e20-bbf7-7afa288a00b2';
+
+// mongolab api key
+// var apiKey = '98098dae-674f-4e20-bbf7-7afa288a00b2';
+
+// wesely api ket
+var apiKey = '82f1f7a8-3edc-49b6-9adf-748b86b74ba8';
 
 function postAudioToWesly(blob) {
     // Recorder.setupDownload( blob, 'myRecording.wav' );
@@ -51,6 +56,7 @@ $(function() {
             ,   commands    : {
                     'hit me'    : 'hit'
                 ,   'hit'       : 'hit'
+                ,   'blackjack' : 'hit'
                 ,   'check'     : 'stay'
                 ,   'stay'      : 'stay'
                 ,   'stand'     : 'stay'
