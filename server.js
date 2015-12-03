@@ -77,6 +77,11 @@ router.get('/', function (req, res) {
     res.sendstatus(200).sendfile('public/index.html');
 });
 
+router.get('/blackjack', function (req, res) {
+    console.log('GET Success! status code 200');
+    res.sendstatus(200).sendfile('public/blackjack.html');
+});
+
 router.post('/api/signup', function (req, res) {
     console.log('POST SUCCESS Status 200');
     User.findOne({ email : req.body.email }, function (err, user) {

@@ -1,0 +1,40 @@
+<!DOCTYPE html> 
+<html>
+<head>
+    <title>Sonus Blackjack</title>
+	<link rel="stylesheet" href="/blackjack.css" />
+</head>
+<body>       
+    <h1>Voice Control Blackjack</h1>
+
+    <div id="game" class="center">
+        <canvas id="blackjack" width="800" height="600"></canvas>
+    </div>
+
+    <div id="controls" class="center">
+        <button id="start-btn">Start</button>
+        <button id="hit-btn">Hit</button>
+        <button id="hold-btn">Stay</button>
+    </div>
+
+    <div id="images" hidden>
+        <img id="back" src="cards/back.png">
+    </div>
+
+    <div align="center">
+        <button id="record">Record</button>
+        <a id="save" href="#">Save wav</a>
+    </div>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script> 
+    <script type="text/javascript" src="js/recorder.js"></script>
+    <script type="text/javascript" src="js/audio.js"></script>
+    <script type="text/javascript" src="js/client.js"></script>
+
+    <script text="text/javascript" src="js/demo/demo.js"></script>
+    <script text="text/javascript" src="js/demo/cardList.js"></script>
+    <script text="text/javascript" src="js/demo/deck.js"></script>
+    <script text="text/javascript" src="js/demo/blackjack.js"></script>
+    <script text="text/javascript" src="js/demo/gameTable.js"></script>
+</body>
+</html>
