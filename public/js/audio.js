@@ -96,7 +96,7 @@ function gotStream(stream) {
 }
 
 function initAudio() {
-    MediaDevices.getUserMedia({
+    navigator.mediaDevices.getUserMedia({
         "audio": {
             "mandatory": {
                 "googEchoCancellation": "false",

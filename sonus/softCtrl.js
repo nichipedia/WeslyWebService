@@ -5,7 +5,7 @@ var fs      = require('fs')
 module.exports = {
     JSONin      : JSONparse
 ,   match       : matchCommand
-,   getCommand  : recognize
+,   getCommand  : getCommand
 }
 
 //parse the JSON object
@@ -17,10 +17,10 @@ function JSONparse(data) {
         var device      = data.devices[i].deviceName;
         var phrases     = Object.keys(data.devices[i].commands);
         var object      = data.devices[i].commands;
-        var commands     = []
+        var commands    = []
 
         phrases.forEach(function (phrase) {
-            results.push(object[phrase]);
+            commands.push(object[phrase]);
         })
 
         response[i] = {
@@ -50,7 +50,7 @@ function matchCommand(moduleResponse, JSONresponse) {
 }
 
 // Run VoCoNoMo to recognize and return command
-function recognize(fileName, device, callBack) {
+function getCommand(fileName, device, callBack) {
     var success = false;
 
     console.log('\n' + device.name);
