@@ -24,7 +24,7 @@ function JSONparse(data) {
         })
 
         response[i] = {
-            device      : device
+            name        : device
         ,   phrases     : phrases
         ,   results     : results 
         }
@@ -51,7 +51,7 @@ function matchCommand(moduleResponse, JSONresponse) {
 
 // Run VoCoNoMo to recognize and return command
 function recognize(fileName, device) {
-    console.log(device);
+    console.log('\n' + device[0].name);
     voco(fileName, function (result) {
         console.log('woo : ' + result);
     });
