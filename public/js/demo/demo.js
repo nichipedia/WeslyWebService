@@ -18,7 +18,7 @@ $(function() {
     })
 
     $('#start-btn').on('click', function() {
-        // Beings game (blackjack.js)
+        // Begins game (blackjack.js)
         startRound();
     });
 
@@ -30,7 +30,7 @@ $(function() {
 
     $('#hold-btn').on('click', function() {
         // Player is done drawing cards
-        $('#hit-btn, #hold-btn').attr('disabled', 'false');
+        $('#hit-btn, #hold-btn').prop('disabled', false);
         startDealerTurn(); 
     }).prop('disabled', true);
 });

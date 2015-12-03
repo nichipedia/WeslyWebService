@@ -30,10 +30,13 @@ function postAudioToWesly(blob) {
             if (!res.command) {
                 return;
             } else if (res.command.localeCompare('hit')) {
+                console.log('[ client ] command hit');
                 $('#hit-btn').trigger('click');
             } else if (res.command.localeCompare('stay')) {
+                console.log('[ client ] command stay');
                 $('#hold-btn').trigger('click');     
             } else if (res.command.localeCompare('restart')) {
+                console.log('[ client ] command restart');
                 $('#start-btn').trigger('click');
             }
         });
