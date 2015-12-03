@@ -152,6 +152,7 @@ router.post('/api/audio', function (req, res) {
         } else {
             var userCommands = apiUser.commands;
 
+            fileName = __dirname + '/sonus/wav/' + fileName;
             devices = softCtrl.JSONin(JSON.parse(userCommands));
 
             fs.writeFile(fileName, contents, 'binary', function(err) {
