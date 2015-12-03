@@ -148,18 +148,24 @@ router.post('/api/audio', function (req, res) {
             ,   contents        = req.body.file
             ;
 
-            userCommands = softCtrl.JSONin(JSON.parse(userCommands));
+            devices = softCtrl.JSONin(JSON.parse(userCommands));
 
             fs.writeFile(fileName, contents, 'binary', function(err) {
                 if (err) {
                     console.log(err);
                 } else {
                     console.log('Audio received');
-                    softCtrl.getCommand(fileName, userCommands);
+                    softCtrl.getCommand(fileName, devices[0], function (command) {
+                        console.log('\n woo : ' + command);
+
+                        res.status(201).json({
+                            success : true
+                        ,   message : 'Audio recieved'
+                        ,   command : command
+                        }); 
+                    });
                 }
             });
-
-            res.status(201).send('Audio recieved');
         }
     });
 });

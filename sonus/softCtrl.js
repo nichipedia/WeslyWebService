@@ -16,17 +16,17 @@ function JSONparse(data) {
     for (var i = 0; i < data.devices.length; i++) {
         var device      = data.devices[i].deviceName;
         var phrases     = Object.keys(data.devices[i].commands);
-        var commands    = data.devices[i].commands;
-        var results     = []
+        var object      = data.devices[i].commands;
+        var commands     = []
 
         phrases.forEach(function (phrase) {
-            results.push(commands[phrase]);
+            results.push(object[phrase]);
         })
 
         response[i] = {
             name        : device
         ,   phrases     : phrases
-        ,   results     : results 
+        ,   commands    : commands 
         }
     }
 
@@ -50,9 +50,20 @@ function matchCommand(moduleResponse, JSONresponse) {
 }
 
 // Run VoCoNoMo to recognize and return command
-function recognize(fileName, device) {
-    console.log('\n' + device[0].name);
+function recognize(fileName, device, callBack) {
+    var success = false;
+
+    console.log('\n' + device.name);
     voco(fileName, function (result) {
-        console.log('woo : ' + result);
+        device.phrases.forEach(function (phrase, i) {
+            if (result.search(phrase) != -1) {
+                success = true;
+                callBack(device.commands[i]);
+            }
+        });
+
+        if (!success) {
+            callBack(null);
+        }
     });
 } 

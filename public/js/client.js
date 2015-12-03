@@ -26,6 +26,7 @@ function postAudioToWesly(blob) {
             })
         }).done(function (res) {
             console.log('[ client ] ' + res.message);
+            console.log('command ' + res.command);
         });
     }
 

@@ -31,7 +31,7 @@ module.exports = function (wavFile, callBack) {
         child.stdout.on('data', function (data) {
             var result = /\|([\w\s]+)\|/g.exec(data.toString());
 
-            console.log(result[0]);
+            console.log('Result : ' + result[0]);
             callBack(result[1]);
         });
 
