@@ -52,7 +52,7 @@ $(function() {
     ,   data        : JSON.stringify({
             apiKey      : apiKey
         ,   object      : JSON.stringify({ devices : [{
-                deviceName  : 'blackjack'
+                deviceName  : 'blackjack demo'
             ,   commands    : {
                     'hit me'    : 'hit'
                 ,   'hit'       : 'hit'

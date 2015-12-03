@@ -1,17 +1,17 @@
 var spawn = require('child_process').spawn;
 
 module.exports = function (wavFile, callBack) {
-    // var downSampled = __dirname + '/sonus.raw';
+    var downSampled = __dirname + '/sonus.raw';
 
-    // ps = spawn('sox', [
-    //     wavFile
-    // ,   '-r', '16k'
-    // ,   '-t', 'raw'
-    // ,   downSampled
-    // ]);
+    ps = spawn('sox', [
+        wavFile
+    ,   '-r', '16k'
+    ,   '-t', 'raw'
+    ,   downSampled
+    ]);
 
-    // ps.on('close', function (code) {
-        // console.log('\nFinished sox down sample with process ' + code+'\n');
+    ps.on('close', function (code) {
+        console.log('\nFinished sox down sample with process ' + code+'\n');
        
         console.log('------------------------------------');
         console.log('  __________   ____  __ __  ______');
@@ -22,10 +22,10 @@ module.exports = function (wavFile, callBack) {
         console.log('------------------------------------\n');
 
         recognize();
-    // });
+    });
 
     function recognize() {
-        var child = spawn(__dirname + '/sonus.o', [wavFile]);
+        var child = spawn(__dirname + '/sonus.o', [downSampled]);
 
         console.log('Recognizing file : ' + wavFile);
         child.stdout.on('data', function (data) {
