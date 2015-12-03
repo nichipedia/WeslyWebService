@@ -1,24 +1,25 @@
 var spawn = require('child_process').spawn;
 
 module.exports = function (wavFile, callBack) {
-    var downSampled = __dirname + '/sonus.wav';
+    var downSampled = __dirname + '/sonus.raw';
 
     ps = spawn('sox', [
         wavFile
     ,   '-r', '16k'
+    ,   '-t', 'raw'
     ,   downSampled
     ]);
 
     ps.on('close', function (code) {
         console.log('\nFinished sox down sample with process ' + code+'\n');
        
-        console.log('====================================');
+        console.log('------------------------------------');
         console.log('  __________   ____  __ __  ______');
         console.log(' /  ___/  _ \\ /    \\|  |  \\/  ___/');
         console.log(' \\___ (  <_> )   |  \\  |  /\\___ \\ ');
         console.log('/____  >____/|___|  /____//____  >');
         console.log('     \\/           \\/           \\/ ');
-        console.log('====================================\n');
+        console.log('------------------------------------\n');
 
         recognize();
     });
@@ -30,7 +31,8 @@ module.exports = function (wavFile, callBack) {
         child.stdout.on('data', function (data) {
             var result = /\|([\w\s]+)\|/g.exec(data.toString());
 
-            console.log(result[0]);
+            if (result && result.length) console.log('Result : ' + result[0]);
+            
             callBack(result[1]);
         });
 

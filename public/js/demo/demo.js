@@ -18,19 +18,22 @@ $(function() {
     })
 
     $('#start-btn').on('click', function() {
-        // Beings game (blackjack.js)
+        // Begins game (blackjack.js)
+        console.log('[ ui ] start button clicked');
         startRound();
     });
 
     $('#hit-btn').on('click', function() {
         // Call funciton to draw card for player
+        console.log('[ ui ] hit button clicked');
         hit(player);
         if (player.score >= 21) $('#hold-btn').trigger('click');
     }).prop('disabled', true);
 
     $('#hold-btn').on('click', function() {
         // Player is done drawing cards
-        $('#hit-btn, #hold-btn').attr('disabled', 'false');
+        console.log('[ ui ] hold button clicked');
+        $('#hit-btn, #hold-btn').prop('disabled', false);
         startDealerTurn(); 
     }).prop('disabled', true);
 });

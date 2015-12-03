@@ -4,7 +4,7 @@ var recording = false;
 // var apiKey = '98098dae-674f-4e20-bbf7-7afa288a00b2';
 
 // wesely api ket
-var apiKey = '82f1f7a8-3edc-49b6-9adf-748b86b74ba8';
+var apiKey = '01a91743-1e9f-425a-b61d-65a728c32248';
 
 function postAudioToWesly(blob) {
     // Recorder.setupDownload( blob, 'myRecording.wav' );
@@ -26,6 +26,21 @@ function postAudioToWesly(blob) {
             })
         }).done(function (res) {
             console.log('[ client ] ' + res.message);
+            
+            if (!res.command) {
+                return;
+            } else if (res.command.localeCompare('hit') === 0) {
+                console.log('[ client ] command hit');
+                $('#hit-btn').trigger('click');
+            } else if (res.command.localeCompare('stay') === 0) {
+                console.log('[ client ] command stay');
+                $('#hold-btn').trigger('click');     
+            } else if (res.command.localeCompare('restart') === 0) {
+                console.log('[ client ] command restart');
+                $('#start-btn').trigger('click');
+            } else if (res.command.localeCompare('flush') === 0) {
+                location.pathname = '/toilet';
+            }
         });
     }
 
@@ -52,17 +67,28 @@ $(function() {
     ,   data        : JSON.stringify({
             apiKey      : apiKey
         ,   object      : JSON.stringify({ devices : [{
-                deviceName  : 'blackjack'
+                deviceName  : 'blackjack demo'
             ,   commands    : {
                     'hit me'    : 'hit'
                 ,   'hit'       : 'hit'
+                ,   'it'        : 'hit'
                 ,   'blackjack' : 'hit'
+                ,   'black'     : 'hit'
+                ,   'jack'      : 'hit'
+                ,   'draw'      : 'hit'
                 ,   'check'     : 'stay'
                 ,   'stay'      : 'stay'
                 ,   'stand'     : 'stay'
                 ,   'fold'      : 'stay'
-                ,   'restart'   : 'start'
-                ,   'start'     : 'start'
+                ,   'hold'      : 'stay'
+                ,   'game'      : 'restart'
+                ,   'restart'   : 'restart'
+                ,   'start'     : 'restart'
+                ,   'flush'     : 'flush'
+                ,   'blush'     : 'flush'
+                ,   'done'      : 'flush'
+                ,   'eat shit'  : 'flush'
+                ,   'toilet'    : 'flush'
                 }
             }]})
         })

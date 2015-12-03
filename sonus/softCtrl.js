@@ -5,7 +5,7 @@ var fs      = require('fs')
 module.exports = {
     JSONin      : JSONparse
 ,   match       : matchCommand
-,   getCommand  : recognize
+,   getCommand  : getCommand
 }
 
 //parse the JSON object
@@ -16,17 +16,17 @@ function JSONparse(data) {
     for (var i = 0; i < data.devices.length; i++) {
         var device      = data.devices[i].deviceName;
         var phrases     = Object.keys(data.devices[i].commands);
-        var commands    = data.devices[i].commands;
-        var results     = []
+        var object      = data.devices[i].commands;
+        var commands    = []
 
         phrases.forEach(function (phrase) {
-            results.push(commands[phrase]);
+            commands.push(object[phrase]);
         })
 
         response[i] = {
-            device      : device
+            name        : device
         ,   phrases     : phrases
-        ,   results     : results 
+        ,   commands    : commands 
         }
     }
 
@@ -50,9 +50,20 @@ function matchCommand(moduleResponse, JSONresponse) {
 }
 
 // Run VoCoNoMo to recognize and return command
-function recognize(fileName, device) {
-    console.log(device);
+function getCommand(fileName, device, callBack) {
+    var success = false;
+
+    console.log('\n' + device.name);
+
     voco(fileName, function (result) {
-        console.log('woo : ' + result);
+        device.phrases.forEach(function (phrase, i) {
+            if (!success && result.search(phrase) != -1) {
+                success = true;
+                console.log(phrase + ' : ' + device.commands[i]);
+                callBack(device.commands[i]);
+            }
+        });
+
+        if (!success) callBack();
     });
 } 
