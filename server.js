@@ -47,8 +47,8 @@ var commandSchema = new mongoose.Schema({
 
 var Command = mongoose.model('Command', commandSchema);
 var User = mongoose.model('User', userSchema);
-mongoose.connect('mongodb://pawn:password1234@ds045664.mongolab.com:45664/sonusjsdb');
-
+//mongoose.connect('mongodb://pawn:password1234@ds045664.mongolab.com:45664/sonusjsdb');
+mongoose.connect('mongodb://localhost:27017/wesly');
 app.use(bodyParser.urlencoded({
   extended: true
 }));
