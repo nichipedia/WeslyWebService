@@ -96,10 +96,7 @@ function gotStream(stream) {
 }
 
 function initAudio() {
-    if (!navigator.getUserMedia)
-        navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-
-    navigator.getUserMedia({
+    MediaDevices.getUserMedia({
         "audio": {
             "mandatory": {
                 "googEchoCancellation": "false",
@@ -109,10 +106,7 @@ function initAudio() {
             },
             "optional": []
         },
-    }, gotStream, function(e) {
-        alert('Error getting audio');
-        console.log(e);
-    });
+    }).then(gotStream);
 }
 
 window.addEventListener('load', initAudio );
