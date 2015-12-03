@@ -48,7 +48,7 @@ var commandSchema = new mongoose.Schema({
 var Command = mongoose.model('Command', commandSchema);
 var User = mongoose.model('User', userSchema);
 
-//mongoose.connect('mongodb://pawn:password1234@ds045664.mongolab.com:45664/sonusjsdb');
+// mongoose.connect('mongodb://pawn:password1234@ds045664.mongolab.com:45664/sonusjsdb');
 mongoose.connect('mongodb://localhost:27017/wesly');
 
 app.use(bodyParser.urlencoded({
@@ -136,9 +136,9 @@ router.post('/api/signup', function (req, res) {
 
 //NOTE: This is the endpoint for passing data for the WAV/audio files
 router.post('/api/audio', function (req, res) {
-    var apiKey      = req.body.apikey       || req.headers.apiKey
-    ,   fileName    = req.body.fileName     || req.headers.fileName
-    ,   file        = req.body.file         || req.body
+    var apiKey      = req.body.apiKey       || req.headers.apikey
+    ,   fileName    = req.body.fileName     || req.headers.filename
+    ,   contents    = req.body.file         || req.body
     ;
 
     Command.findOne({apiKey: apiKey}, function (err, apiUser) {
