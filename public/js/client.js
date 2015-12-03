@@ -25,7 +25,7 @@ function postAudioToWesly(blob) {
             ,   file        : contents
             })
         }).done(function (res) {
-            console.log('[ client ] | ' + res.message);
+            console.log('[ client ] ' + res.message);
         });
     }
 
@@ -67,6 +67,6 @@ $(function() {
             }]})
         })
     }).done(function (res) {
-        console.log('[ client ] | ' + res.message);
+        console.log('[ client ] ' + res.message);
     });
 });
