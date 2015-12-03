@@ -96,17 +96,38 @@ function gotStream(stream) {
 }
 
 function initAudio() {
-    navigator.mediaDevices.getUserMedia({
-        "audio": {
-            "mandatory": {
-                "googEchoCancellation": "false",
-                "googAutoGainControl": "false",
-                "googNoiseSuppression": "false",
-                "googHighpassFilter": "false"
+    if(navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
+        navigator.mediaDevices.getUserMedia({
+            "audio": {
+                "mandatory": {
+                    "googEchoCancellation": "false",
+                    "googAutoGainControl": "false",
+                    "googNoiseSuppression": "false",
+                    "googHighpassFilter": "false"
+                },
+                "optional": []
             },
-            "optional": []
-        },
-    }).then(gotStream);
+        }).then(gotStream);
+
+    } else {
+        if (!navigator.getUserMedia)
+            navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+
+        navigator.getUserMedia({
+            "audio": {
+                "mandatory": {
+                    "googEchoCancellation": "false",
+                    "googAutoGainControl": "false",
+                    "googNoiseSuppression": "false",
+                    "googHighpassFilter": "false"
+                },
+                "optional": []
+            },
+        }, gotStream, function(e) {
+            alert('Error getting audio');
+            console.log(e);
+        });
+    }
 }
 
 window.addEventListener('load', initAudio );
