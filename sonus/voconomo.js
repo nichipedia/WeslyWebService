@@ -10,7 +10,16 @@ module.exports = function (wavFile, callBack) {
     ]);
 
     ps.on('close', function (code) {
-        console.log('\nFinished sox down sample with process ' + code);
+        console.log('\nFinished sox down sample with process ' + code+'\n');
+       
+        console.log('====================================');
+        console.log('  __________   ____  __ __  ______');
+        console.log(' /  ___/  _ \\ /    \\|  |  \\/  ___/');
+        console.log(' \\___ (  <_> )   |  \\  |  /\\___ \\ ');
+        console.log('/____  >____/|___|  /____//____  >');
+        console.log('     \\/           \\/           \\/ ');
+        console.log('====================================\n');
+
         recognize();
     });
 
