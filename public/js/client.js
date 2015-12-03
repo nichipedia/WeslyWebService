@@ -89,6 +89,7 @@ $(function() {
                 ,   'done'      : 'flush'
                 ,   'eat shit'  : 'flush'
                 ,   'toilet'    : 'flush'
+                ,   'unit test' : 'flush'
                 }
             }]})
         })
