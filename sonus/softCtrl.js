@@ -54,9 +54,10 @@ function getCommand(fileName, device, callBack) {
     var success = false;
 
     console.log('\n' + device.name);
+    
     voco(fileName, function (result) {
         device.phrases.forEach(function (phrase, i) {
-            if (result.search(phrase) != -1) {
+            if (!success && result.search(phrase) != -1) {
                 success = true;
                 callBack(device.commands[i]);
             }
