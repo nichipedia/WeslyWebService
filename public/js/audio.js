@@ -86,9 +86,6 @@ function gotStream(stream) {
     analyserNode.fftSize = 2048;
     inputPoint.connect( analyserNode );
 
-    // Attemting to sample at 16kHz
-    inputPoint.context.sampleRate = '16000';
-
     audioRecorder = new Recorder( inputPoint );
 
     zeroGain = audioContext.createGain();
