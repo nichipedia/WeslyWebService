@@ -38,6 +38,8 @@ function postAudioToWesly(blob) {
             } else if (res.command.localeCompare('restart') === 0) {
                 console.log('[ client ] command restart');
                 $('#start-btn').trigger('click');
+            } else if (res.command.localeCompare('restart') === 0) {
+                location.pathname = '/toilet';
             }
         });
     }
@@ -69,13 +71,24 @@ $(function() {
             ,   commands    : {
                     'hit me'    : 'hit'
                 ,   'hit'       : 'hit'
+                ,   'it'        : 'hit'
                 ,   'blackjack' : 'hit'
+                ,   'black'     : 'hit'
+                ,   'jack'      : 'hit'
+                ,   'draw'      : 'hit'
                 ,   'check'     : 'stay'
                 ,   'stay'      : 'stay'
                 ,   'stand'     : 'stay'
                 ,   'fold'      : 'stay'
+                ,   'hold'      : 'stay'
+                ,   'game'      : 'restart'
                 ,   'restart'   : 'restart'
                 ,   'start'     : 'restart'
+                ,   'flush'     : 'flush'
+                ,   'blush'     : 'flush'
+                ,   'done'      : 'flush'
+                ,   'eat shit'  : 'flush'
+                ,   'toilet'    : 'flush'
                 }
             }]})
         })
