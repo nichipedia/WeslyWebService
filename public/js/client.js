@@ -29,13 +29,13 @@ function postAudioToWesly(blob) {
             
             if (!res.command) {
                 return;
-            } else if (res.command.localeCompare('hit')) {
+            } else if (res.command.localeCompare('hit') === 0) {
                 console.log('[ client ] command hit');
                 $('#hit-btn').trigger('click');
-            } else if (res.command.localeCompare('stay')) {
+            } else if (res.command.localeCompare('stay') === 0) {
                 console.log('[ client ] command stay');
                 $('#hold-btn').trigger('click');     
-            } else if (res.command.localeCompare('restart')) {
+            } else if (res.command.localeCompare('restart') === 0) {
                 console.log('[ client ] command restart');
                 $('#start-btn').trigger('click');
             }

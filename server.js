@@ -163,7 +163,7 @@ router.post('/api/audio', function (req, res) {
                     softCtrl.getCommand(fileName, devices[0], function (command) {
                         res.status(201).json({
                             success : true
-                        ,   message : !command ? 'Audio recieved' : 'No command recognized'
+                        ,   message : command ? 'Audio recieved' : 'No command recognized'
                         ,   command : command
                         }); 
                     });
