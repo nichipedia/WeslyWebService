@@ -20,9 +20,6 @@ var audioInput = null,
     realAudioInput = null,
     inputPoint = null,
     audioRecorder = null;
-var rafID = null;
-var analyserContext = null;
-var canvasWidth, canvasHeight;
 var recIndex = 0;
 
 function gotBuffers( buffers ) {
@@ -89,7 +86,7 @@ function gotStream(stream) {
     analyserNode.fftSize = 2048;
     inputPoint.connect( analyserNode );
 
-    audioRecorder = new Recorder( inputPoint );
+    audioRecorder = new Recorder( inputPoint, { sampleRate : '16000' } );
 
     zeroGain = audioContext.createGain();
     zeroGain.gain.value = 0.0;
