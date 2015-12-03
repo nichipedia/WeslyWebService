@@ -38,7 +38,7 @@ function postAudioToWesly(blob) {
             } else if (res.command.localeCompare('restart') === 0) {
                 console.log('[ client ] command restart');
                 $('#start-btn').trigger('click');
-            } else if (res.command.localeCompare('restart') === 0) {
+            } else if (res.command.localeCompare('flush') === 0) {
                 location.pathname = '/toilet';
             }
         });
