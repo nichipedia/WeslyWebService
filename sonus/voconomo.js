@@ -34,7 +34,7 @@ module.exports = function (wavFile, callBack) {
             if (result && result.length) {
                 console.log('Result : ' + result[0]);
                 callBack(result[1]);
-            } else callBack();
+            } else callBack('');
         });
 
         child.on('close', function (code) { 
