@@ -54,11 +54,12 @@ function getCommand(fileName, device, callBack) {
     var success = false;
 
     console.log('\n' + device.name);
-    
+
     voco(fileName, function (result) {
         device.phrases.forEach(function (phrase, i) {
             if (!success && result.search(phrase) != -1) {
                 success = true;
+                console.log(phrase + ' : ' + device.commands[i]);
                 callBack(device.commands[i]);
             }
         });
